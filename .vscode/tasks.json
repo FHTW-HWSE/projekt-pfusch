@@ -1,0 +1,38 @@
+{
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: build",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"detail": "CMake template build task"
+		},
+		// {
+		// 	"label": "build_debug",
+		// 	"type": "shell",
+		// 	"command": "make"
+		// },
+		// {
+		// 	"label": "clean",
+		// 	"type": "shell",
+		// 	"command": "make clean"
+		// },
+		// {
+		// 	"label": "build",
+		// 	"dependsOn": [
+		// 		"clean",
+		// 		"build_debug"
+		// 	],
+		// 	"problemMatcher": [
+		// 		"$gcc"
+		// 	]
+		// }
+	]
+}
