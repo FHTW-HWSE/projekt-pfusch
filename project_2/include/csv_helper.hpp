@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base.hpp"
+#include "Entities.hpp"
 
 // Result create_record(unique_ptr<Entities::BaseEntity> &e, string filename);
 // Result read_record(unique_ptr<Entities::BaseEntity> &e, string filename);

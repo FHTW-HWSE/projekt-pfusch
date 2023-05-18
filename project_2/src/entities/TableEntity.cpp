@@ -1,6 +1,6 @@
 #include "TableEntity.hpp"
 #include "Base.hpp"
-#include "sting_conversion_helper.hpp"
+#include "conversion_helper.hpp"
 
 namespace Entities
 {
@@ -26,24 +26,24 @@ namespace Entities
         return this->persitable_prop_count + BaseEntity::get_persitable_prop_count();
     }
 
-    bool TableEntity::equals(const BaseEntity &target)
-    {
+    // bool TableEntity::equals(const BaseEntity &target)
+    // {
 
-        const TableEntity *tmp = dynamic_cast<const TableEntity *>(&target);
+    //     const TableEntity *tmp = dynamic_cast<const TableEntity *>(&target);
 
-        return 
-            tmp != nullptr 
-            && this->id == tmp->id 
-            && this->x == tmp->x 
-            && this->y == tmp->y 
-            && this->capacity == tmp->capacity;
-    }
+    //     return 
+    //         tmp != nullptr 
+    //         && this->id == tmp->id 
+    //         && this->x == tmp->x 
+    //         && this->y == tmp->y 
+    //         && this->capacity == tmp->capacity;
+    // }
 
-    bool TableEntity::equals(const std::unique_ptr<BaseEntity> &target)
-    {
-        const TableEntity *tmp = dynamic_cast<const TableEntity *>(target.get());
-        return tmp != nullptr && equals(*tmp);
-    }
+    // bool TableEntity::equals(const std::unique_ptr<BaseEntity> &target)
+    // {
+    //     const TableEntity *tmp = dynamic_cast<const TableEntity *>(target.get());
+    //     return tmp != nullptr && equals(*tmp);
+    // }
 
     auto TableEntity::db_read_record(std::unique_ptr<BaseEntity> &target, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string>
     {
@@ -53,17 +53,17 @@ namespace Entities
         }
 
         // convert data
-        auto id = str_to_uuid(fields.at(index));
-        auto x = str_to_int_strict(fields.at(index + 1));
-        auto y = str_to_int_strict(fields.at(index + 2));
-        auto capacity = str_to_int_strict(fields.at(index + 3));
+        auto id = Helper::str_to_uuid(fields.at(index));
+        auto x = Helper::str_to_int_strict(fields.at(index + 1));
+        auto y = Helper::str_to_int_strict(fields.at(index + 2));
+        auto capacity = Helper::str_to_int_strict(fields.at(index + 3));
 
         if (id.has_error() || x.has_error() || y.has_error() || capacity.has_error())
         {
             return cpp::fail("Could not parse all arguments.\n");
         }
 
-        std::unique_ptr<BaseEntity> table = std::make_unique<BaseEntity>(TableEntity(x.value(), y.value(), capacity.value()));
+        std::unique_ptr<BaseEntity> table = std::make_unique<TableEntity>(TableEntity(x.value(), y.value(), capacity.value()));
         table.get()->id = id.value();
 
         target.swap(table);
@@ -84,7 +84,7 @@ namespace Entities
             return cpp::fail("Not enough arguments.\n");
         }
 
-        auto id = str_to_uuid(fields.at(index));
+        auto id = Helper::str_to_uuid(fields.at(index));
 
         if (id.has_error())
         {
@@ -102,17 +102,17 @@ namespace Entities
         }
 
         // convert data
-        auto id = str_to_uuid(fields.at(index));
-        auto x = str_to_int_strict(fields.at(index + 1));
-        auto y = str_to_int_strict(fields.at(index + 2));
-        auto capacity = str_to_int_strict(fields.at(index + 3));
+        auto id = Helper::str_to_uuid(fields.at(index));
+        auto x = Helper::str_to_int_strict(fields.at(index + 1));
+        auto y = Helper::str_to_int_strict(fields.at(index + 2));
+        auto capacity = Helper::str_to_int_strict(fields.at(index + 3));
 
         if (id.has_error() || x.has_error() || y.has_error() || capacity.has_error())
         {
             return cpp::fail("Could not parse all arguments.\n");
         }
 
-        std::unique_ptr<BaseEntity> table = std::make_unique<BaseEntity>(TableEntity(x.value(), y.value(), capacity.value()));
+        std::unique_ptr<BaseEntity> table = std::make_unique<TableEntity>(TableEntity(x.value(), y.value(), capacity.value()));
         table.get()->id = id.value();
 
         source.swap(table);
@@ -135,8 +135,8 @@ namespace Entities
             return cpp::fail("Entity is not of type TableEntity\n");
         }
 
-        auto x = str_to_int_strict(fields.at(index + 1));
-        auto y = str_to_int_strict(fields.at(index + 2));
+        auto x = Helper::str_to_int_strict(fields.at(index + 1));
+        auto y = Helper::str_to_int_strict(fields.at(index + 2));
 
         if (x.has_error())
         {

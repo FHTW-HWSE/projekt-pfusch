@@ -1,5 +1,3 @@
-#pragma once
-
 #include <fstream>
 #include <time.h>
 #include <string>
@@ -8,20 +6,50 @@
 #include "DbConnector.hpp"
 #include "result.hpp"
 
-namespace DateBase
+namespace DataBase
 {
     static const std::string TABLE_DICT_PATH = "table_layout/";
     static const std::string TABLE_LAYOUT_PATH = TABLE_DICT_PATH + "table_layout.csv";
     static const std::string RESERVATIONS_DICT_PATH = "reservations/";
 
+    std::unique_ptr<DbConnector> DbConnector::private_instance;
+
+
     DbConnector::DbConnector(std::string connection){
         this->connection = connection;
     }
 
-    std::string DbConnector::get_connection_string(){
-        return this->connection;
+    DbConnector::~DbConnector(){
+        
     }
 
+    bool DbConnector::has_instance(){
+        return
+            DbConnector::private_instance != nullptr
+            || DbConnector::private_instance.get() != nullptr;
+    }
+
+    void DbConnector::init_connector(std::string &str)
+    {
+        if (!has_instance())
+        {
+            DbConnector::private_instance = std::make_unique<DbConnector>(DbConnector(str));
+        }
+        else
+        {
+            DbConnector::instance()->connection = str;
+        }
+    }
+        
+    DbConnector * DbConnector::instance()
+    {
+        return DbConnector::private_instance.get();
+    }
+
+    std::string DbConnector::get_connection_string()
+    {
+        return this->connection;
+    }
 
     auto DbConnector::create_file_if_not_exists(std::string &path) noexcept -> cpp::result<bool, std::string>
     {
@@ -38,6 +66,7 @@ namespace DateBase
         }
 
         fs.close();
+        return true;
     }
 
     auto DbConnector::create_dictionary_if_not_exists(std::string &path) noexcept -> cpp::result<bool, std::string>
@@ -50,6 +79,8 @@ namespace DateBase
         {
             return cpp::fail(e.what());
         }
+
+        return false;
     }
 
     auto DbConnector::get_table_layout_path() noexcept -> cpp::result<std::string, std::string>
@@ -81,9 +112,9 @@ namespace DateBase
             return cpp::fail(r_tables.error());
         }
 
-        std::string reservation_path = this->connection + TABLE_DICT_PATH;
+        std::string reservation_path = this->connection + RESERVATIONS_DICT_PATH;
 
-        auto r_res = this->create_dictionary_if_not_exists(tables_path);
+        auto r_res = this->create_dictionary_if_not_exists(reservation_path);
 
         if(r_res.has_error()){
             return cpp::fail(r_res.error());

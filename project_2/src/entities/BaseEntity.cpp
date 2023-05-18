@@ -1,9 +1,15 @@
 #include "BaseEntity.hpp"
 #include "result.hpp"
+#include "conversion_helper.hpp"
 
 namespace Entities
 {
-    uuids::uuid BaseEntity::create_new_uuid(){
+    BaseEntity::~BaseEntity(){
+
+    }
+
+    uuids::uuid BaseEntity::create_new_uuid()
+    {
         std::random_device rd;
         auto seed_data = std::array<int, std::mt19937::state_size> {};
         std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
@@ -18,6 +24,9 @@ namespace Entities
         return this->persitable_prop_count;
     }
 
+    std::string BaseEntity::parse_to_csv(){
+        return Helper::id_to_string(this->id);
+    }
 }
 
 
