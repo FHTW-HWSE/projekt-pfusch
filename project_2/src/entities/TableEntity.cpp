@@ -18,7 +18,7 @@ namespace Entities
 
     std::string TableEntity::parse_to_csv()
     {
-        return BaseEntity::parse_to_csv() + std::to_string(this->x) + this->delimiter + std::to_string(this->y) + this->delimiter + std::to_string(this->capacity);
+        return BaseEntity::parse_to_csv()+ this->delimiter + std::to_string(this->x) + this->delimiter + std::to_string(this->y) + this->delimiter + std::to_string(this->capacity);
     }
 
     int TableEntity::get_persitable_prop_count()

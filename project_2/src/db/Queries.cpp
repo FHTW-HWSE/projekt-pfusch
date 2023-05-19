@@ -3,12 +3,13 @@
 
 #include "Base.hpp"
 #include "Entities.hpp"
+#include "Queries.hpp"
 #include "DbConnector.hpp"
 #include "csv_helper.hpp"
 
 namespace DataBase
 {
-    auto read_tables_by_x_y(std::vector<std::unique_ptr<Entities::BaseEntity>> tables) noexcept -> cpp::result<bool, std::string>
+    auto Queries::read_tables_by_x_y(std::vector<std::unique_ptr<Entities::BaseEntity>> &tables, std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
     {
         // Entities::TableEntity *table = dynamic_cast<Entities::TableEntity*>(table.get());
 
@@ -30,7 +31,7 @@ namespace DataBase
         return csv_helper::read_records(tables, type, filename, Entities::TableEntity::db_match_record_by_x_and_y);
     }
 
-    auto read_all_tables(std::vector<std::unique_ptr<Entities::BaseEntity>> &tables) noexcept -> cpp::result<bool, std::string>
+    auto Queries::read_all_tables(std::vector<std::unique_ptr<Entities::BaseEntity>> &tables) noexcept -> cpp::result<bool, std::string>
     {
         auto r_path = DbConnector::instance()->get_table_layout_path();
 
@@ -53,7 +54,7 @@ namespace DataBase
         return r_read_all.value();
     }
 
-    auto create_table(std::unique_ptr<Entities::BaseEntity> &t) noexcept -> cpp::result<bool, std::string>
+    auto Queries::create_table(std::unique_ptr<Entities::BaseEntity> &t) noexcept -> cpp::result<bool, std::string>
     {
         Entities::TableEntity *table = dynamic_cast<Entities::TableEntity *>(t.get());
 
@@ -102,7 +103,7 @@ namespace DataBase
         return csv_helper::create_record(t, filename);
     }
 
-    auto read_tables(std::vector<std::unique_ptr<Entities::BaseEntity>> tables) noexcept -> cpp::result<bool, std::string>
+    auto Queries::read_tables_by_id(std::vector<std::unique_ptr<Entities::BaseEntity>> &tables, std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
     {
         // Entities::TableEntity *table = dynamic_cast<Entities::TableEntity*>(table.get());
 
@@ -121,11 +122,10 @@ namespace DataBase
         std::string filename = r_path.value();
         std::unique_ptr<Entities::BaseEntity> type = std::make_unique<Entities::TableEntity>(Entities::TableEntity(0, 0, 0));
 
-        return csv_helper::read_records(tables, type, filename, Entities::TableEntity::db_match_record_by_id);
+        return csv_helper::read_records(tables, table, filename, Entities::TableEntity::db_match_record_by_id);
     }
 
-
-    auto update_table(std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
+    auto Queries::update_table(std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
     {
         Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(table.get());
 
@@ -146,7 +146,7 @@ namespace DataBase
         return csv_helper::update_record(table, filename, Entities::TableEntity::db_match_record_by_id);
     }
 
-    auto delete_table(std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
+    auto Queries::delete_table(std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
     {
         Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(table.get());
 

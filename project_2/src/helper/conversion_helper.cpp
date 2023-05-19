@@ -74,4 +74,19 @@ namespace Helper
 	{
 		return uuids::to_string(id);
 	}
+
+	std::string tm_to_Ymd(const std::tm &tm){
+		char buffer[15];
+        size_t format = strftime(buffer, 15, "%Y-%m-%d", &tm);
+
+		return std::string(buffer);
+	}
+
+	std::tm Ymd_to_tm(const std::string &str){
+		struct tm tm;
+		const char* c_str = str.c_str();
+		auto last = strptime(c_str, "%Y-%m-%d", &tm);
+		return tm;
+	}
+
 }

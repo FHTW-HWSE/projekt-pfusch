@@ -71,14 +71,14 @@ namespace csv_helper
 		std::string line, word, temp;
 		bool has_values = false;
 
-		while (fin >> temp)
+		while (fin >> line)
 		{
 
 			row.clear();
 
 			// read an entire row and
 			// store it in a std::string variable 'line'
-			getline(fin, line);
+			//getline(fin, line);
 
 			// used for breaking words
 			std::stringstream s(line);
