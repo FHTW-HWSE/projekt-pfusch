@@ -10,7 +10,8 @@
                 "${workspaceFolder}/project_2/src/helper",
                 "${workspaceFolder}/project_2/src/ui",
                 "${workspaceFolder}/project_2/src/views",
-                "${workspaceFolder}/project_2/dependencies/result/include"
+                "${workspaceFolder}/project_2/dependencies/result/include",
+                "${workspaceFolder}/project_2/test/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

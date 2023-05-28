@@ -26,26 +26,7 @@ namespace Entities
         return this->persitable_prop_count + BaseEntity::get_persitable_prop_count();
     }
 
-    // bool TableEntity::equals(const BaseEntity &target)
-    // {
-
-    //     const TableEntity *tmp = dynamic_cast<const TableEntity *>(&target);
-
-    //     return 
-    //         tmp != nullptr 
-    //         && this->id == tmp->id 
-    //         && this->x == tmp->x 
-    //         && this->y == tmp->y 
-    //         && this->capacity == tmp->capacity;
-    // }
-
-    // bool TableEntity::equals(const std::unique_ptr<BaseEntity> &target)
-    // {
-    //     const TableEntity *tmp = dynamic_cast<const TableEntity *>(target.get());
-    //     return tmp != nullptr && equals(*tmp);
-    // }
-
-    auto TableEntity::db_read_record(std::unique_ptr<BaseEntity> &target, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string>
+    auto TableEntity::parse_from_csv(std::unique_ptr<BaseEntity> &target, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string>
     {
         if (fields.size() < index + this->get_persitable_prop_count())
         {
@@ -72,85 +53,61 @@ namespace Entities
         return true;
     }
 
-    auto TableEntity::db_write_record() noexcept -> cpp::result<std::string, std::string>
+    auto TableEntity::match_by_id(std::unique_ptr<BaseEntity> &target, std::unique_ptr<BaseEntity> &source) noexcept -> cpp::result<bool, std::string>
     {
-        return this->parse_to_csv();
+        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(source.get());
+
+        if (table_source == nullptr)
+        {
+            return cpp::fail("Source not of type Entities::TableEntity.\n");
+        }
+
+        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(target.get());
+
+        if (table_target == nullptr)
+        {
+            return cpp::fail("Target not of type Entities::TableEntity.\n");
+        }
+
+        return table_source->id == table_target->id;
     }
 
-    auto TableEntity::db_match_record_by_id(std::unique_ptr<BaseEntity> &source, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string>
+    auto TableEntity::match_any(std::unique_ptr<BaseEntity> &target, std::unique_ptr<BaseEntity> &source) noexcept -> cpp::result<bool, std::string>
     {
-        if (fields.size() < index + source->get_persitable_prop_count())
+        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(source.get());
+
+        if (table_source == nullptr)
         {
-            return cpp::fail("Not enough arguments.\n");
+            return cpp::fail("Source not of type Entities::TableEntity.\n");
         }
 
-        auto id = Helper::str_to_uuid(fields.at(index));
+        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(target.get());
 
-        if (id.has_error())
+        if (table_target == nullptr)
         {
-            return cpp::fail("Could not parse id.\n");
+            return cpp::fail("Target not of type Entities::TableEntity.\n");
         }
-
-        return source.get()->id == id.value();
-    }
-
-    auto TableEntity::db_match_any(std::unique_ptr<BaseEntity> &source, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string>
-    {
-        if (fields.size() < index + persitable_prop_count)
-        {
-            return cpp::fail("Not enough arguments.\n");
-        }
-
-        // convert data
-        auto id = Helper::str_to_uuid(fields.at(index));
-        auto x = Helper::str_to_int_strict(fields.at(index + 1));
-        auto y = Helper::str_to_int_strict(fields.at(index + 2));
-        auto capacity = Helper::str_to_int_strict(fields.at(index + 3));
-
-        if (id.has_error() || x.has_error() || y.has_error() || capacity.has_error())
-        {
-            return cpp::fail("Could not parse all arguments.\n");
-        }
-
-        std::unique_ptr<BaseEntity> table = std::make_unique<TableEntity>(TableEntity(x.value(), y.value(), capacity.value()));
-        table.get()->id = id.value();
-
-        source.swap(table);
-        index += persitable_prop_count;
 
         return true;
     }
 
-    auto TableEntity::db_match_record_by_x_and_y(std::unique_ptr<BaseEntity> &source, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string>
+    auto TableEntity::match_by_x_and_y(std::unique_ptr<BaseEntity> &target, std::unique_ptr<BaseEntity> &source) noexcept -> cpp::result<bool, std::string>
     {
-        if (fields.size() < index + persitable_prop_count)
+        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(source.get());
+
+        if (table_source == nullptr)
         {
-            return cpp::fail("Not enough arguments.\n");
+            return cpp::fail("Source not of type Entities::TableEntity.\n");
         }
 
-        const TableEntity *table = dynamic_cast<const TableEntity *>(source.get());
+        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(target.get());
 
-        if (table == nullptr)
+        if (table_target == nullptr)
         {
-            return cpp::fail("Entity is not of type TableEntity\n");
+            return cpp::fail("Target not of type Entities::TableEntity.\n");
         }
 
-        auto x = Helper::str_to_int_strict(fields.at(index + 1));
-        auto y = Helper::str_to_int_strict(fields.at(index + 2));
-
-        if (x.has_error())
-        {
-            // std::strerror(errno)
-            return cpp::fail(std::strerror(static_cast<int>(x.error())));
-        }
-
-        if (y.has_error())
-        {
-            // std::strerror(errno)
-            return cpp::fail(std::strerror(static_cast<int>(y.error())));
-        }
-
-        return table->x == x.value() && table->y == y.value();
+        return table_source->x == table_target->x && table_source->y == table_target->y;
     }
 }
 

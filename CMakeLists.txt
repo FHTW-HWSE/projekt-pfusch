@@ -4,10 +4,11 @@ cmake_minimum_required(VERSION 3.10.0)
 project(P2)
 
 set (CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 # set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Catch2 REQUIRED)
+find_package(Catch2 3 REQUIRED)
+# find_package(Catch2 REQUIRED)
 
 include(CTest)
 include(Catch)

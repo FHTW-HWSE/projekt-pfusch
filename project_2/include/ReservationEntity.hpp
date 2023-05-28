@@ -20,7 +20,7 @@ namespace Entities
         unsigned int persitable_prop_count;
         ReservationEntity(TableEntity *table_entity, std::string contact_person);
         ~ReservationEntity();
-        virtual std::string parse_to_csv();
+        virtual std::string parse_to_csv() override;
     };
 }
 
