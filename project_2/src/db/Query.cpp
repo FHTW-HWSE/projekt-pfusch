@@ -8,9 +8,9 @@
 
 namespace DataBase
 {
-    auto Query::read_tables_by_x_y(std::vector<std::unique_ptr<Entities::BaseEntity>> &tables, std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
+    auto Query::read_tables_by_x_y(std::vector<std::unique_ptr<Entities::BaseEntity>> &tables, Entities::BaseEntity &table) noexcept -> cpp::result<bool, std::string>
     {
-        Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(table.get());
+        Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(&table);
 
         if (table_ptr == nullptr)
         {
@@ -40,7 +40,7 @@ namespace DataBase
 
         std::string filename = r_path.value();
 
-        std::unique_ptr<Entities::BaseEntity> type = std::make_unique<Entities::TableEntity>(Entities::TableEntity(0, 0, 0));
+        Entities::TableEntity type(1, 1, 1);
 
         auto r_read_all = Enviroment::Config::instance()->get_db_con()->get_crud()->read_all_records(tables, type, filename, Entities::TableEntity::match_any);
 
@@ -52,9 +52,9 @@ namespace DataBase
         return r_read_all.value();
     }
 
-    auto Query::create_table(std::unique_ptr<Entities::BaseEntity> &t) noexcept -> cpp::result<bool, std::string>
+    auto Query::create_table(Entities::BaseEntity &t) noexcept -> cpp::result<bool, std::string>
     {
-        Entities::TableEntity *table = dynamic_cast<Entities::TableEntity *>(t.get());
+        Entities::TableEntity *table = dynamic_cast<Entities::TableEntity *>(&t);
 
         if (table == nullptr)
         {
@@ -101,9 +101,9 @@ namespace DataBase
         return Enviroment::Config::instance()->get_db_con()->get_crud()->create_record(t, filename);
     }
 
-    auto Query::read_tables_by_id(std::vector<std::unique_ptr<Entities::BaseEntity>> &tables, std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
+    auto Query::read_tables_by_id(std::vector<std::unique_ptr<Entities::BaseEntity>> &tables, Entities::BaseEntity &table) noexcept -> cpp::result<bool, std::string>
     {
-        Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(table.get());
+        Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(&table);
 
         if (table_ptr == nullptr)
         {
@@ -123,9 +123,9 @@ namespace DataBase
         return Enviroment::Config::instance()->get_db_con()->get_crud()->read_records(tables, table, filename, Entities::TableEntity::match_by_id);
     }
 
-    auto Query::update_table(std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
+    auto Query::update_table(Entities::BaseEntity &table) noexcept -> cpp::result<bool, std::string>
     {
-        Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(table.get());
+        Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(&table);
 
         if (table_ptr == nullptr)
         {
@@ -144,9 +144,9 @@ namespace DataBase
         return Enviroment::Config::instance()->get_db_con()->get_crud()->update_record(table, filename, Entities::TableEntity::match_by_id);
     }
 
-    auto Query::delete_table(std::unique_ptr<Entities::BaseEntity> &table) noexcept -> cpp::result<bool, std::string>
+    auto Query::delete_table(Entities::BaseEntity &table) noexcept -> cpp::result<bool, std::string>
     {
-        Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(table.get());
+        Entities::TableEntity *table_ptr = dynamic_cast<Entities::TableEntity *>(&table);
 
         if (table_ptr == nullptr)
         {

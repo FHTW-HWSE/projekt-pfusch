@@ -4,6 +4,17 @@
 
 namespace Entities
 {
+
+    BaseEntity::BaseEntity()
+    {
+        this->id = create_new_uuid();
+    }
+
+    BaseEntity::BaseEntity(const BaseEntity &b)
+    {
+        this->id = b.id;
+    }
+
     BaseEntity::~BaseEntity(){
 
     }
@@ -26,6 +37,17 @@ namespace Entities
 
     std::string BaseEntity::parse_to_csv(){
         return Helper::id_to_string(this->id);
+    }
+
+    bool BaseEntity::isEqual(const BaseEntity& obj) const
+    {
+        return id == obj.id;
+    }
+
+    bool operator==(const BaseEntity& lhs, const BaseEntity& rhs) 
+    {
+        return typeid(lhs) == typeid(rhs) // Allow compare only instances of the same dynamic type
+            && lhs.isEqual(rhs);       // If types are the same then do the comparision.
     }
 }
 

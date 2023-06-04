@@ -4,16 +4,39 @@
 
 namespace Entities
 {
-    TableEntity::TableEntity(int x, int y, unsigned int capacity)
+    TableEntity::TableEntity(int x, int y, unsigned int capacity) : BaseEntity()
     {
-        this->id = create_new_uuid();
         this->x = x;
         this->y = y;
         this->capacity = capacity;
     }
 
+    TableEntity::TableEntity(const TableEntity &table) : BaseEntity(table)
+    {
+        this->x = table.x;
+        this->y = table.y;
+        this->capacity = table.capacity;
+    }
+
     TableEntity::~TableEntity()
     {
+    }
+
+    bool TableEntity::isEqual(const BaseEntity& obj) const
+    {
+        // will never throw as isEqual is called only when
+        // (typeid(lhs) == typeid(rhs)) is true.
+        auto v = dynamic_cast<const TableEntity&>(obj); 
+
+        return BaseEntity::isEqual(v) 
+            && x == v.x
+            && y == v.y
+            && capacity == v.capacity;
+    }
+
+    std::unique_ptr<BaseEntity> TableEntity::clone() const
+    {
+        return std::make_unique<TableEntity>( *this );
     }
 
     std::string TableEntity::parse_to_csv()
@@ -53,16 +76,16 @@ namespace Entities
         return true;
     }
 
-    auto TableEntity::match_by_id(std::unique_ptr<BaseEntity> &target, std::unique_ptr<BaseEntity> &source) noexcept -> cpp::result<bool, std::string>
+    auto TableEntity::match_by_id(BaseEntity &target, BaseEntity &source) noexcept -> cpp::result<bool, std::string>
     {
-        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(source.get());
+        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(&source);
 
         if (table_source == nullptr)
         {
             return cpp::fail("Source not of type Entities::TableEntity.\n");
         }
 
-        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(target.get());
+        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(&target);
 
         if (table_target == nullptr)
         {
@@ -72,16 +95,16 @@ namespace Entities
         return table_source->id == table_target->id;
     }
 
-    auto TableEntity::match_any(std::unique_ptr<BaseEntity> &target, std::unique_ptr<BaseEntity> &source) noexcept -> cpp::result<bool, std::string>
+    auto TableEntity::match_any(BaseEntity &target, BaseEntity &source) noexcept -> cpp::result<bool, std::string>
     {
-        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(source.get());
+        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(&source);
 
         if (table_source == nullptr)
         {
             return cpp::fail("Source not of type Entities::TableEntity.\n");
         }
 
-        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(target.get());
+        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(&target);
 
         if (table_target == nullptr)
         {
@@ -91,16 +114,16 @@ namespace Entities
         return true;
     }
 
-    auto TableEntity::match_by_x_and_y(std::unique_ptr<BaseEntity> &target, std::unique_ptr<BaseEntity> &source) noexcept -> cpp::result<bool, std::string>
+    auto TableEntity::match_by_x_and_y(BaseEntity &target, BaseEntity &source) noexcept -> cpp::result<bool, std::string>
     {
-        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(source.get());
+        Entities::TableEntity *table_source = dynamic_cast<Entities::TableEntity *>(&source);
 
         if (table_source == nullptr)
         {
             return cpp::fail("Source not of type Entities::TableEntity.\n");
         }
 
-        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(target.get());
+        Entities::TableEntity *table_target = dynamic_cast<Entities::TableEntity *>(&target);
 
         if (table_target == nullptr)
         {

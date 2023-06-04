@@ -10,10 +10,8 @@
 
 SCENARIO("Query")
 {
-    // DataBase::DbConnector::init_connector(DB_PATH);
-    // auto meh = DataBase::DbConnector::instance()->init_db_structure();
     Enviroment_actual();
-    auto r = Enviroment::Config::instance()->get_db_con()->init_db();
+    auto init_enviroment = Enviroment::Config::instance()->get_db_con()->init_db();
 
 	GIVEN("want to save table")
 	{
@@ -30,11 +28,11 @@ SCENARIO("Query")
 		WHEN("saves table")
 		{
 
-            std::unique_ptr<Entities::BaseEntity> ptr = std::make_unique<Entities::TableEntity>(table);
-            auto r_create = DataBase::Query::create_table(ptr);
+            Entities::TableEntity table(0,0,0);
+            auto r_create = DataBase::Query::create_table(table);
 
             std::vector<std::unique_ptr<Entities::BaseEntity>> tables;
-            auto r_read = DataBase::Query::read_tables_by_id(tables, ptr);
+            auto r_read = DataBase::Query::read_tables_by_id(tables, table);
 
 			THEN("table is svaed in the DB")
 			{
@@ -73,11 +71,11 @@ SCENARIO("Query")
 		WHEN("reads table")
 		{
 
-            std::unique_ptr<Entities::BaseEntity> ptr = std::make_unique<Entities::TableEntity>(table);
-            auto r_create = DataBase::Query::create_table(ptr);
+            Entities::TableEntity table(0,0,0);
+            auto r_create = DataBase::Query::create_table(table);
 
             std::vector<std::unique_ptr<Entities::BaseEntity>> tables;
-            auto r_read = DataBase::Query::read_tables_by_id(tables, ptr);
+            auto r_read = DataBase::Query::read_tables_by_id(tables, table);
 
 			THEN("table is read from the DB")
 			{
@@ -116,11 +114,11 @@ SCENARIO("Query")
 		WHEN("read table by x y")
 		{
 
-            std::unique_ptr<Entities::BaseEntity> ptr = std::make_unique<Entities::TableEntity>(table);
-            auto r_create = DataBase::Query::create_table(ptr);
+            Entities::TableEntity table(0,0,0);
+            auto r_create = DataBase::Query::create_table(table);
 
             std::vector<std::unique_ptr<Entities::BaseEntity>> tables;
-            auto r_read = DataBase::Query::read_tables_by_x_y(tables, ptr);
+            auto r_read = DataBase::Query::read_tables_by_x_y(tables, table);
 
 			THEN("table is read from the DB")
 			{
@@ -143,4 +141,6 @@ SCENARIO("Query")
 
         clear_db();
 	}
+
+	Enviroment_mock();
 }

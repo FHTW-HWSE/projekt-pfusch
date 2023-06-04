@@ -12,12 +12,12 @@
 
 namespace DataBase
 {
-	auto DbCrud::create_record(std::unique_ptr<Entities::BaseEntity> &e, std::string filename) noexcept -> cpp::result<bool, std::string>
+	auto DbCrud::create_record(Entities::BaseEntity &e, std::string filename) noexcept -> cpp::result<bool, std::string>
 	{
 		// file pointer
 		std::fstream fout;
 
-		auto csv_str = e.get()->parse_to_csv();
+		auto csv_str = e.parse_to_csv();
 
 		try
 		{
@@ -37,7 +37,7 @@ namespace DataBase
 		return true;
 	}
 
-	auto DbCrud::read_records(std::vector<std::unique_ptr<Entities::BaseEntity>> &e, std::unique_ptr<Entities::BaseEntity> &source, std::string filename, Entities::BaseEntity::MATCH_FUNC match_func) noexcept -> cpp::result<bool, std::string>
+	auto DbCrud::read_records(std::vector<std::unique_ptr<Entities::BaseEntity>> &e, Entities::BaseEntity &source, std::string filename, Entities::BaseEntity::MATCH_FUNC match_func) noexcept -> cpp::result<bool, std::string>
 	{
 		if (match_func == nullptr)
 		{
@@ -78,7 +78,7 @@ namespace DataBase
 
 			// read every column data of a row and
 			// store it in a std::string variable, 'word'
-			while (getline(s, word, source.get()->delimiter))
+			while (getline(s, word, source.delimiter))
 			{
 
 				// add all the column data
@@ -90,7 +90,7 @@ namespace DataBase
 			// roll2 = stoi(row[0]);
 			int index = 0;
 			std::unique_ptr<Entities::BaseEntity> target(nullptr);
-			auto parse_r = source.get()->parse_from_csv(target, row, index);
+			auto parse_r = source.parse_from_csv(target, row, index);
 
 			if(parse_r.has_error())
 			{
@@ -98,7 +98,7 @@ namespace DataBase
 				return cpp::fail(parse_r.error());
 			}
 
-			auto read_result = match_func(target, source);
+			auto read_result = match_func(*target, source);
 
 			if (read_result.has_error())
 			{
@@ -117,7 +117,7 @@ namespace DataBase
 		return has_values;
 	}
 
-	auto DbCrud::read_all_records(std::vector<std::unique_ptr<Entities::BaseEntity>> &e, std::unique_ptr<Entities::BaseEntity> &source, std::string filename, Entities::BaseEntity::MATCH_FUNC match_func) noexcept -> cpp::result<bool, std::string>
+	auto DbCrud::read_all_records(std::vector<std::unique_ptr<Entities::BaseEntity>> &e, Entities::BaseEntity &source, std::string filename, Entities::BaseEntity::MATCH_FUNC match_func) noexcept -> cpp::result<bool, std::string>
 	{
 		if (match_func == nullptr)
 		{
@@ -170,7 +170,7 @@ namespace DataBase
 			// roll2 = stoi(row[0]);
 			int index = 0;
 			std::unique_ptr<Entities::BaseEntity> target(nullptr);
-			auto parse_r = source.get()->parse_from_csv(target, row, index);
+			auto parse_r = source.parse_from_csv(target, row, index);
 
 			if(parse_r.has_error())
 			{
@@ -178,7 +178,7 @@ namespace DataBase
 				return cpp::fail(parse_r.error());
 			}
 
-			auto read_result = match_func(target, source);
+			auto read_result = match_func(*target, source);
 
 			if (read_result.has_error())
 			{
@@ -197,7 +197,7 @@ namespace DataBase
 		return true;
 	}
 
-	auto DbCrud::update_record(std::unique_ptr<Entities::BaseEntity> &e, std::string filename, Entities::BaseEntity::MATCH_FUNC match_func) noexcept -> cpp::result<bool, std::string>
+	auto DbCrud::update_record(Entities::BaseEntity &e, std::string filename, Entities::BaseEntity::MATCH_FUNC match_func) noexcept -> cpp::result<bool, std::string>
 	{
 		if (match_func == nullptr)
 		{
@@ -235,14 +235,14 @@ namespace DataBase
 			getline(fin, line);
 			std::stringstream s(line);
 
-			while (getline(s, word, e.get()->delimiter))
+			while (getline(s, word, e.delimiter))
 			{
 				row.push_back(word);
 			}
 
 			int index = 0;
 			std::unique_ptr<Entities::BaseEntity> target(nullptr);
-			auto parse_r = e.get()->parse_from_csv(target, row, index);
+			auto parse_r = e.parse_from_csv(target, row, index);
 
 			if(parse_r.has_error())
 			{
@@ -250,7 +250,7 @@ namespace DataBase
 				return cpp::fail(parse_r.error());
 			}
 
-			auto read_result = match_func(target, e);
+			auto read_result = match_func(*target, e);
 
 			if(read_result.has_error()){
 				fin.close();
@@ -259,7 +259,7 @@ namespace DataBase
 
 			if(read_result.value() == true)
 			{
-					updated_file_rows.push_back(e.get()->parse_to_csv());
+					updated_file_rows.push_back(e.parse_to_csv());
 					updated = true;
 			}
 			else 
@@ -295,7 +295,7 @@ namespace DataBase
 		return true;
 	}
 
-	auto DbCrud::delete_record(std::unique_ptr<Entities::BaseEntity> &e, std::string filename, Entities::BaseEntity::MATCH_FUNC match_func) noexcept -> cpp::result<bool, std::string>
+	auto DbCrud::delete_record(Entities::BaseEntity &e, std::string filename, Entities::BaseEntity::MATCH_FUNC match_func) noexcept -> cpp::result<bool, std::string>
 	{
 		if (match_func == nullptr)
 		{
@@ -332,14 +332,14 @@ namespace DataBase
 			getline(fin, line);
 			std::stringstream s(line);
 
-			while (getline(s, word, e.get()->delimiter))
+			while (getline(s, word, e.delimiter))
 			{
 				row.push_back(word);
 			}
 
 			int index = 0;
 			std::unique_ptr<Entities::BaseEntity> target(nullptr);
-			auto parse_r = e.get()->parse_from_csv(target, row, index);
+			auto parse_r = e.parse_from_csv(target, row, index);
 
 			if(parse_r.has_error())
 			{
@@ -347,7 +347,7 @@ namespace DataBase
 				return cpp::fail(parse_r.error());
 			}
 
-			auto read_result = match_func(target, e);
+			auto read_result = match_func(*target, e);
 
 			if(read_result.has_error()){
 				fin.close();
