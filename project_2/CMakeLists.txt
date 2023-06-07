@@ -21,6 +21,7 @@ file(GLOB test_sources
     test/*.cpp
     test/db/*.cpp
     test/mock_objects/*.cpp
+    test/fascades/*.cpp
 )
 
 # test executable

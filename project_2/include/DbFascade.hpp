@@ -1,0 +1,22 @@
+#pragma once
+
+#include "Base.hpp"
+#include "TableEntity.hpp"
+
+namespace Fascades
+{
+    class DbFascade
+    {
+        private:
+
+            static auto fill_tables_vector(std::vector<std::unique_ptr<Entities::TableEntity>> &tables, std::vector<std::unique_ptr<Entities::BaseEntity>> &items) noexcept -> cpp::result<bool, std::string>;
+
+        public:
+            static auto get_tables_by_x_y(std::vector<std::unique_ptr<Entities::TableEntity>> &tables, const int &x, const int &y) noexcept -> cpp::result<bool, std::string>;
+            static auto get_tables_by_id(std::vector<std::unique_ptr<Entities::TableEntity>> &tables, const uuids::uuid &id) noexcept -> cpp::result<bool, std::string>;
+            static auto get_all_tables(std::vector<std::unique_ptr<Entities::TableEntity>> &tables) noexcept -> cpp::result<bool, std::string>;
+            static auto create_table(Entities::TableEntity &table) noexcept -> cpp::result<bool, std::string>;
+            static auto update_table(Entities::TableEntity &table) noexcept -> cpp::result<bool, std::string>;
+            static auto delete_table(Entities::TableEntity &table) noexcept -> cpp::result<bool, std::string>;
+    };
+}
