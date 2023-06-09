@@ -49,7 +49,10 @@ namespace Entities
 
     std::string TableEntity::parse_to_csv()
     {
-        return BaseEntity::parse_to_csv()+ this->delimiter + std::to_string(this->x) + this->delimiter + std::to_string(this->y) + this->delimiter + std::to_string(this->capacity);
+        return BaseEntity::parse_to_csv() 
+            + this->delimiter + std::to_string(this->x) 
+            + this->delimiter + std::to_string(this->y) 
+            + this->delimiter + std::to_string(this->capacity);
     }
 
     int TableEntity::get_persitable_prop_count()
@@ -59,7 +62,7 @@ namespace Entities
 
     auto TableEntity::parse_from_csv(std::unique_ptr<BaseEntity> &target, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string>
     {
-        if (fields.size() < index + this->get_persitable_prop_count())
+        if (fields.size() < index + this->persitable_prop_count)
         {
             return cpp::fail("Not enough arguments.\n");
         }

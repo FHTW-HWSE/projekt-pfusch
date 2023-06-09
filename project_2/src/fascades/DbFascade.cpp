@@ -24,6 +24,7 @@ namespace Fascades
         return true;
     }
 
+#pragma region  TableEntity
     auto DbFascade::get_tables_by_x_y(std::vector<std::unique_ptr<Entities::TableEntity>> &tables, const int &x, const int &y) noexcept -> cpp::result<bool, std::string>
     {
         Entities::TableEntity table(x, y, 0);
@@ -104,11 +105,18 @@ namespace Fascades
         return DataBase::Query::delete_table(table);
     }
 
+#pragma endregion
 
+    auto DbFascade::create_reservation(Entities::ReservationEntity &table) noexcept -> cpp::result<bool, std::string>
+    {
+        return DataBase::Query::create_reservation(table);
+    }
 
     auto DbFascade::get_reservations_by_x_y(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations, const int &x, const int &y) noexcept -> cpp::result<bool, std::string>
     {
         Entities::ReservationEntity reservation;
+        reservation.table.get()->x = x;
+        reservation.table.get()->y = y;
 
         std::vector<std::unique_ptr<Entities::BaseEntity>> items;
 
@@ -151,7 +159,7 @@ namespace Fascades
         return items.size() > 0;
     }
 
-    auto DbFascade::get_all_open_reservations_(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations) noexcept -> cpp::result<bool, std::string>
+    auto DbFascade::get_all_open_reservations(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations) noexcept -> cpp::result<bool, std::string>
     {
         std::vector<std::unique_ptr<Entities::BaseEntity>> items;
 
@@ -174,5 +182,14 @@ namespace Fascades
 
     }
 
+    auto DbFascade::update_reservation(Entities::ReservationEntity &reservation) noexcept -> cpp::result<bool, std::string>
+    {
+        return DataBase::Query::update_reservation(reservation);
+    }
+
+    auto DbFascade::delete_reservation(Entities::ReservationEntity &reservation) noexcept -> cpp::result<bool, std::string>
+    {
+        return DataBase::Query::delete_reservation(reservation);
+    }
 
 }

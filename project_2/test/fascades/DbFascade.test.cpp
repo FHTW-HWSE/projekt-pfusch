@@ -345,7 +345,7 @@ SCENARIO("Db_fascade")
             crud_ptr->mock_read_records(r, source1);
 
             std::vector<std::unique_ptr<Entities::ReservationEntity>> reservations;
-            auto result = Fascades::DbFascade::get_all_open_reservations_(reservations);
+            auto result = Fascades::DbFascade::get_all_open_reservations(reservations);
             
 			THEN("read all open reservations from DB")
 			{
@@ -371,4 +371,128 @@ SCENARIO("Db_fascade")
 			}
 		}
 	}
+
+    GIVEN("user wants to create a reservation")
+	{
+        Entities::ReservationEntity source0;
+
+        auto result = GENERATE
+        (
+            as<cpp::result<bool, std::string>>{},
+            cpp::result<bool, std::string>{true},
+            cpp::result<bool, std::string>{false}
+        );
+
+		WHEN("creates table")
+		{
+            std::string contact = "unit-test";
+            Entities::TableEntity table1(1, 1, 1);
+            Entities::ReservationEntity res1(table1, contact);
+            Entities::TableEntity table2(2, 2, 2);
+            Entities::ReservationEntity res2(table2, contact);
+            Entities::TableEntity table3(3, 3, 3);
+            Entities::ReservationEntity res3(table3, contact);
+
+            std::vector<std::unique_ptr<Entities::BaseEntity>> sources;
+            sources.push_back(std::make_unique<Entities::ReservationEntity>(res1));
+            sources.push_back(std::make_unique<Entities::ReservationEntity>(res2));
+            sources.push_back(std::make_unique<Entities::ReservationEntity>(res3));
+
+            const auto r_1 = cpp::result<bool, std::string> {true};
+            crud_ptr->mock_read_all_records(r_1, sources);
+
+            const auto r_2 = result;
+            crud_ptr->mock_create_record(r_2);
+
+            auto update_result = Fascades::DbFascade::create_reservation(source0);
+            
+			THEN("table is created in DB")
+			{
+                REQUIRE(result.has_value() == update_result.has_value());
+
+                if(result.has_value())
+                {
+                    REQUIRE(result.value() == update_result.value());
+                }
+                else
+                {
+                    REQUIRE(result.error() == update_result.error());
+                }
+			}
+		}
+	}
+
+    GIVEN("user wants to update a reservation")
+	{
+        std::string contact = "unit-test";
+        Entities::TableEntity table1(1, 1, 1);
+        Entities::ReservationEntity res1(table1, contact);
+
+
+        auto result = GENERATE
+        (
+            as<cpp::result<bool, std::string>>{},
+            cpp::result<bool, std::string>{true},
+            cpp::result<bool, std::string>{false}
+        );
+
+		WHEN("update reservation")
+		{
+            const auto r = result;
+            crud_ptr->mock_update_record(r);
+
+            auto update_result = Fascades::DbFascade::update_reservation(res1);
+            
+			THEN("reservation is updated in DB")
+			{
+                REQUIRE(result.has_value() == update_result.has_value());
+
+                if(result.has_value())
+                {
+                    REQUIRE(result.value() == update_result.value());
+                }
+                else
+                {
+                    REQUIRE(result.error() == update_result.error());
+                }
+			}
+		}
+	}
+
+    GIVEN("user wants to delete a reservation")
+	{
+        std::string contact = "unit-test";
+        Entities::TableEntity table1(1, 1, 1);
+        Entities::ReservationEntity res1(table1, contact);
+
+        auto result = GENERATE
+        (
+            as<cpp::result<bool, std::string>>{},
+            cpp::result<bool, std::string>{true},
+            cpp::result<bool, std::string>{false}
+        );
+
+		WHEN("delete reservation")
+		{
+            const auto r = result;
+            crud_ptr->mock_delete_record(r);
+
+            auto update_result = Fascades::DbFascade::delete_reservation(res1);
+            
+			THEN("reservation is deleted in DB")
+			{
+                REQUIRE(result.has_value() == update_result.has_value());
+
+                if(result.has_value())
+                {
+                    REQUIRE(result.value() == update_result.value());
+                }
+                else
+                {
+                    REQUIRE(result.error() == update_result.error());
+                }
+			}
+		}
+	}
+
 }

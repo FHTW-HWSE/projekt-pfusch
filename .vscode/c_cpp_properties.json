@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/project_2/include",
+                "${workspaceFolder}/project_2/include/UiMenu",
                 "${workspaceFolder}/project_2/src",
                 "${workspaceFolder}/project_2/src/db",
                 "${workspaceFolder}/project_2/src/helper",
