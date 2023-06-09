@@ -46,8 +46,6 @@ target_link_libraries(project_2_test
     ps_lib
 )
 
-message(${CMAKE_CURRENT_SOURCE_DIR}/test)
-
 catch_discover_tests(project_2_test
     EXTRA_ARGS ${CMAKE_CURRENT_SOURCE_DIR}/test
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test

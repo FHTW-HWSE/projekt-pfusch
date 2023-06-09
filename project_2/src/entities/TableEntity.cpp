@@ -4,6 +4,13 @@
 
 namespace Entities
 {
+    TableEntity::TableEntity() : BaseEntity()
+    {
+        this->x = 0;
+        this->y = 0;
+        this->capacity = 0;
+    }
+
     TableEntity::TableEntity(int x, int y, unsigned int capacity) : BaseEntity()
     {
         this->x = x;
@@ -21,6 +28,7 @@ namespace Entities
     TableEntity::~TableEntity()
     {
     }
+
 
     bool TableEntity::isEqual(const BaseEntity& obj) const
     {
@@ -57,10 +65,10 @@ namespace Entities
         }
 
         // convert data
-        auto id = Helper::str_to_uuid(fields.at(index));
-        auto x = Helper::str_to_int_strict(fields.at(index + 1));
-        auto y = Helper::str_to_int_strict(fields.at(index + 2));
-        auto capacity = Helper::str_to_int_strict(fields.at(index + 3));
+        auto id = Helper::str_to_uuid(fields.at(index++));
+        auto x = Helper::str_to_int_strict(fields.at(index++));
+        auto y = Helper::str_to_int_strict(fields.at(index++));
+        auto capacity = Helper::str_to_int_strict(fields.at(index));
 
         if (id.has_error() || x.has_error() || y.has_error() || capacity.has_error())
         {
@@ -71,7 +79,6 @@ namespace Entities
         table.get()->id = id.value();
 
         target.swap(table);
-        index += get_persitable_prop_count();
 
         return true;
     }

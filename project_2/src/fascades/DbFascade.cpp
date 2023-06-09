@@ -5,18 +5,19 @@
 
 namespace Fascades
 {
-    auto DbFascade::fill_tables_vector(std::vector<std::unique_ptr<Entities::TableEntity>> &tables, std::vector<std::unique_ptr<Entities::BaseEntity>> &items) noexcept -> cpp::result<bool, std::string>
+    template<class T>
+    auto DbFascade::fill_vector(std::vector<std::unique_ptr<T>> &tables, std::vector<std::unique_ptr<Entities::BaseEntity>> &items) noexcept -> cpp::result<bool, std::string>
     {
         for (const auto &s : items)
         {
-            auto t_ptr = dynamic_cast<Entities::TableEntity*>(s.get());
+            auto t_ptr = dynamic_cast<T*>(s.get());
 
             if(t_ptr == nullptr)
             {
-                return cpp::fail("Read something else than a Table from DB.");
+                return cpp::fail("Read wrong Entity from DB.");
             }
 
-            auto unique_table = std::make_unique<Entities::TableEntity>(*t_ptr);
+            auto unique_table = std::make_unique<T>(*t_ptr);
             tables.push_back(std::move(unique_table));
         }
 
@@ -35,7 +36,7 @@ namespace Fascades
             return query_result;
         }
 
-        auto fill_r = fill_tables_vector(tables, items);
+        auto fill_r = fill_vector(tables, items);
 
         if(fill_r.has_error())
         {
@@ -58,7 +59,7 @@ namespace Fascades
             return query_result;
         }
 
-        auto fill_r = fill_tables_vector(tables, items);
+        auto fill_r = fill_vector(tables, items);
 
         if(fill_r.has_error())
         {
@@ -78,7 +79,7 @@ namespace Fascades
             return query_result;
         }
 
-        auto fill_r = fill_tables_vector(tables, items);
+        auto fill_r = fill_vector(tables, items);
 
         if(fill_r.has_error())
         {
@@ -102,4 +103,76 @@ namespace Fascades
     {
         return DataBase::Query::delete_table(table);
     }
+
+
+
+    auto DbFascade::get_reservations_by_x_y(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations, const int &x, const int &y) noexcept -> cpp::result<bool, std::string>
+    {
+        Entities::ReservationEntity reservation;
+
+        std::vector<std::unique_ptr<Entities::BaseEntity>> items;
+
+        auto query_result = DataBase::Query::read_reservations_by_x_y(items, reservation);
+
+        if(query_result.has_error()){
+            return query_result;
+        }
+
+        auto fill_r = fill_vector(reservations, items);
+
+        if(fill_r.has_error())
+        {
+            return fill_r;
+        }
+
+        return items.size() > 0;
+    }
+
+    auto DbFascade::get_reservations_by_id(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations, const uuids::uuid &id) noexcept -> cpp::result<bool, std::string>
+    {
+        Entities::ReservationEntity res;
+        res.id = id;
+
+        std::vector<std::unique_ptr<Entities::BaseEntity>> items;
+
+        auto query_result = DataBase::Query::read_reservations_by_id(items, res);
+
+        if(query_result.has_error()){
+            return query_result;
+        }
+
+        auto fill_r = fill_vector(reservations, items);
+
+        if(fill_r.has_error())
+        {
+            return fill_r;
+        }
+
+        return items.size() > 0;
+    }
+
+    auto DbFascade::get_all_open_reservations_(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations) noexcept -> cpp::result<bool, std::string>
+    {
+        std::vector<std::unique_ptr<Entities::BaseEntity>> items;
+
+        Entities::ReservationEntity res;
+
+        auto query_result = DataBase::Query::read_all_open_reservations(items, res);
+
+        if(query_result.has_error()){
+            return query_result;
+        }
+
+        auto fill_r = fill_vector(reservations, items);
+
+        if(fill_r.has_error())
+        {
+            return fill_r;
+        }
+
+        return items.size() > 0;
+
+    }
+
+
 }

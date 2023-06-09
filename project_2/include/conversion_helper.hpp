@@ -21,4 +21,8 @@ namespace Helper
 	std::string tm_to_Ymd(const std::tm &tm);
 
 	std::tm Ymd_to_tm(const std::string &str);
+
+	std::string time_t_to_string(const time_t &time);
+
+	time_t string_to_time_t(const std::string str);
 }

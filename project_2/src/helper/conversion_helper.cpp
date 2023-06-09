@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string>
+#include <sstream>
 
 #include "conversion_helper.hpp"
 
@@ -87,6 +88,21 @@ namespace Helper
 		const char* c_str = str.c_str();
 		auto last = strptime(c_str, "%Y-%m-%d", &tm);
 		return tm;
+	}
+
+	std::string time_t_to_string(const time_t &time)
+	{
+		std::ostringstream oss;
+		oss << time;
+		return oss.str();
+	}
+
+	time_t string_to_time_t(const std::string str)
+	{
+		std::istringstream stream( str );
+		time_t t;
+		stream >> t;
+		return t;
 	}
 
 }

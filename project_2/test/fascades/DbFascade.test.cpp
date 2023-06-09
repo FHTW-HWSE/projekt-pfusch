@@ -1,12 +1,14 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <string>
+#include <stdlib.h>
 
 #include "DbFascade.hpp"
 #include "Enviroment.hpp"
 #include "DbCrudMock.hpp"
 #include "TableEntity.hpp"
 #include "Query.hpp"
+
 
 SCENARIO("Db_fascade")
 {
@@ -131,7 +133,7 @@ SCENARIO("Db_fascade")
 
     GIVEN("user wants to create a table")
 	{
-        Entities::TableEntity source1(0, 0, 0);
+        Entities::TableEntity source0(0, 0, 0);
 
         auto result = GENERATE
         (
@@ -157,7 +159,7 @@ SCENARIO("Db_fascade")
             const auto r_2 = result;
             crud_ptr->mock_create_record(r_2);
 
-            auto update_result = Fascades::DbFascade::create_table(source1);
+            auto update_result = Fascades::DbFascade::create_table(source0);
             
 			THEN("table is created in DB")
 			{
@@ -238,6 +240,133 @@ SCENARIO("Db_fascade")
                 else
                 {
                     REQUIRE(result.error() == update_result.error());
+                }
+			}
+		}
+	}
+
+    GIVEN("user wants to get a reservation by x y")
+	{
+        Entities::ReservationEntity source;
+
+        std::vector<std::unique_ptr<Entities::BaseEntity>> source1;
+        auto item1 = std::make_unique<Entities::ReservationEntity>(source);
+        source1.push_back(std::make_unique<Entities::ReservationEntity>(source));
+
+		WHEN("get reservation by x y")
+		{
+            const auto r = cpp::result<bool, std::string> {true};
+            crud_ptr->mock_read_records(r, source1);
+
+            std::vector<std::unique_ptr<Entities::ReservationEntity>> reservations;
+            auto result = Fascades::DbFascade::get_reservations_by_x_y(reservations, source.table.get()->x, source.table.get()->y);
+            
+			THEN("table is svaed in the DB")
+			{
+                REQUIRE(result.has_value() == true);
+                REQUIRE(result.value() == true);
+                REQUIRE(reservations.size() == 1);
+                REQUIRE(source1.size() == reservations.size());
+
+                while (reservations.empty() == false)
+                {
+                    auto s = std::move(source1.back());
+                    source1.pop_back();
+                    auto t = std::move(reservations.back());
+                    reservations.pop_back();
+
+                    auto *s_ptr = dynamic_cast<Entities::ReservationEntity*>(s.get());
+
+                    auto meh1 = *s_ptr;
+                    auto meh2 = *t;
+
+                    REQUIRE(s_ptr != nullptr);
+                    REQUIRE((*s_ptr) == (*t));
+                }
+			}
+		}
+	}
+
+    GIVEN("user wants to get a reservation by id")
+	{
+        Entities::ReservationEntity source;
+
+        std::vector<std::unique_ptr<Entities::BaseEntity>> source1;
+        auto item1 = std::make_unique<Entities::ReservationEntity>(source);
+        source1.push_back(std::make_unique<Entities::ReservationEntity>(source));
+
+		WHEN("get reservation by x y")
+		{
+            const auto r = cpp::result<bool, std::string> {true};
+            crud_ptr->mock_read_records(r, source1);
+
+            std::vector<std::unique_ptr<Entities::ReservationEntity>> reservations;
+            auto result = Fascades::DbFascade::get_reservations_by_id(reservations, source.id);
+            
+			THEN("table is svaed in the DB")
+			{
+                REQUIRE(result.has_value() == true);
+                REQUIRE(result.value() == true);
+                REQUIRE(reservations.size() == 1);
+                REQUIRE(source1.size() == reservations.size());
+
+                while (reservations.empty() == false)
+                {
+                    auto s = std::move(source1.back());
+                    source1.pop_back();
+                    auto t = std::move(reservations.back());
+                    reservations.pop_back();
+
+                    auto *s_ptr = dynamic_cast<Entities::ReservationEntity*>(s.get());
+
+                    auto meh1 = *s_ptr;
+                    auto meh2 = *t;
+
+                    REQUIRE(s_ptr != nullptr);
+                    REQUIRE((*s_ptr) == (*t));
+                }
+			}
+		}
+	}
+
+    GIVEN("user wants to get all open reservations")
+	{
+        Entities::ReservationEntity source;
+
+        std::vector<std::unique_ptr<Entities::BaseEntity>> source1;
+        auto item1 = std::make_unique<Entities::ReservationEntity>(source);
+        source1.push_back(std::make_unique<Entities::ReservationEntity>(source));
+        source1.push_back(std::make_unique<Entities::ReservationEntity>(source));
+        source1.push_back(std::make_unique<Entities::ReservationEntity>(source));
+
+		WHEN("get open reservation")
+		{
+            const auto r = cpp::result<bool, std::string> {true};
+            crud_ptr->mock_read_records(r, source1);
+
+            std::vector<std::unique_ptr<Entities::ReservationEntity>> reservations;
+            auto result = Fascades::DbFascade::get_all_open_reservations_(reservations);
+            
+			THEN("read all open reservations from DB")
+			{
+                REQUIRE(result.has_value() == true);
+                REQUIRE(result.value() == true);
+                REQUIRE(source1.size() == reservations.size());
+
+                while (reservations.empty() == false)
+                {
+                    auto s = std::move(source1.back());
+                    source1.pop_back();
+                    auto t = std::move(reservations.back());
+                    reservations.pop_back();
+
+                    auto *s_ptr = dynamic_cast<Entities::ReservationEntity*>(s.get());
+
+                    auto meh1 = *s_ptr;
+                    auto meh2 = *t;
+
+                    REQUIRE(s_ptr != nullptr);
+                    REQUIRE((*s_ptr) == (*t));
                 }
 			}
 		}

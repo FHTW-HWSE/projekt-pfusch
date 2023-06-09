@@ -8,7 +8,6 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 # set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Catch2 3 REQUIRED)
-# find_package(Catch2 REQUIRED)
 
 include(CTest)
 include(Catch)

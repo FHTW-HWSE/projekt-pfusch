@@ -167,4 +167,74 @@ namespace DataBase
 
         return Enviroment::Config::instance()->get_db_con()->get_crud()->delete_record(table, filename, Entities::TableEntity::match_by_id);
     }
+
+    auto Query::read_reservations_by_x_y(std::vector<std::unique_ptr<Entities::BaseEntity>> &reservations, Entities::BaseEntity &reservation) noexcept -> cpp::result<bool, std::string>
+    {
+        Entities::ReservationEntity *table_ptr = dynamic_cast<Entities::ReservationEntity *>(&reservation);
+
+        if (table_ptr == nullptr)
+        {
+            return cpp::fail("Entity not of type Entities::ReservationEntity.");
+        }
+
+        auto r_path = Enviroment::Config::instance()->get_db_con()->get_table_layout_path();
+
+        if (r_path.has_error())
+        {
+            return cpp::fail(r_path.error());
+        }
+
+        std::string filename = r_path.value();
+
+        return Enviroment::Config::instance()->get_db_con()->get_crud()
+            ->read_records(reservations, reservation, filename, Entities::ReservationEntity::match_by_table_x_y);
+    }
+
+    auto Query::read_reservations_by_id(std::vector<std::unique_ptr<Entities::BaseEntity>> &reservations, Entities::BaseEntity &reservation) noexcept -> cpp::result<bool, std::string>
+    {
+        Entities::ReservationEntity *table_ptr = dynamic_cast<Entities::ReservationEntity *>(&reservation);
+
+        if (table_ptr == nullptr)
+        {
+            return cpp::fail("Entity not of type Entities::ReservationEntity.");
+        }
+
+        auto r_path =Enviroment::Config::instance()->get_db_con()->get_table_layout_path();
+
+        if (r_path.has_error())
+        {
+            return cpp::fail(r_path.error());
+        }
+
+        std::string filename = r_path.value();
+        std::unique_ptr<Entities::BaseEntity> type = std::make_unique<Entities::ReservationEntity>(Entities::ReservationEntity());
+
+        return Enviroment::Config::instance()->get_db_con()->get_crud()
+            ->read_records(reservations, reservation, filename, Entities::ReservationEntity::match_by_id);
+    }
+
+    auto Query::read_all_open_reservations(std::vector<std::unique_ptr<Entities::BaseEntity>> &reservations, Entities::BaseEntity &reservation) noexcept -> cpp::result<bool, std::string>
+    {
+        Entities::ReservationEntity *table_ptr = dynamic_cast<Entities::ReservationEntity *>(&reservation);
+
+        if (table_ptr == nullptr)
+        {
+            return cpp::fail("Entity not of type Entities::ReservationEntity.");
+        }
+
+        auto r_path =Enviroment::Config::instance()->get_db_con()->get_table_layout_path();
+
+        if (r_path.has_error())
+        {
+            return cpp::fail(r_path.error());
+        }
+
+        std::string filename = r_path.value();
+        std::unique_ptr<Entities::BaseEntity> type = std::make_unique<Entities::ReservationEntity>(Entities::ReservationEntity());
+
+        return Enviroment::Config::instance()->get_db_con()->get_crud()
+            ->read_records(reservations, reservation, filename, Entities::ReservationEntity::match_open_reservation);
+    }
+
+
 }

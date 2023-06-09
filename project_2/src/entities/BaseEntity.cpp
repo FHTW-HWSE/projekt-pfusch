@@ -41,7 +41,7 @@ namespace Entities
 
     bool BaseEntity::isEqual(const BaseEntity& obj) const
     {
-        return id == obj.id;
+        return this->id == obj.id;
     }
 
     bool operator==(const BaseEntity& lhs, const BaseEntity& rhs) 

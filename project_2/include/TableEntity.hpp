@@ -18,6 +18,7 @@ namespace Entities
         int x;
         int y;
         unsigned int capacity;
+        TableEntity();
         TableEntity(int x, int y, unsigned int capacity);
         TableEntity(const TableEntity &table);
         ~TableEntity();
