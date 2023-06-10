@@ -64,20 +64,22 @@ namespace DataBase
 		std::string line, word, temp;
 		bool has_values = false;
 
-		while (fin >> line)
+		while (fin >> temp)
 		{
 
 			row.clear();
 
 			// read an entire row and
 			// store it in a std::string variable 'line'
-			//getline(fin, line);
+			// getline(fin, line);
+			line = temp;
 
 			// used for breaking words
 			std::stringstream s(line);
 
 			// read every column data of a row and
 			// store it in a std::string variable, 'word'
+			std::string delim = std::to_string(source.delimiter) + " ";
 			while (getline(s, word, source.delimiter))
 			{
 
@@ -151,7 +153,8 @@ namespace DataBase
 
 			// read an entire row and
 			// store it in a std::string variable 'line'
-			getline(fin, line);
+			// getline(fin, line);
+			line = temp;
 
 			// used for breaking words
 			std::stringstream s(line);
