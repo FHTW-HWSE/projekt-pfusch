@@ -5,14 +5,15 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/project_2/include",
-                "${workspaceFolder}/project_2/include/UiMenu",
+                "${workspaceFolder}/project_2/include/ui_menu",
                 "${workspaceFolder}/project_2/src",
                 "${workspaceFolder}/project_2/src/db",
                 "${workspaceFolder}/project_2/src/helper",
                 "${workspaceFolder}/project_2/src/ui",
                 "${workspaceFolder}/project_2/src/views",
                 "${workspaceFolder}/project_2/dependencies/result/include",
-                "${workspaceFolder}/project_2/test/include"
+                "${workspaceFolder}/project_2/test/include",
+                "${workspaceFolder}/project_2/include/entities"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

@@ -14,9 +14,10 @@ namespace Enviroment
         return &INSTANCE;
     }
 
-    void Config::init(std::unique_ptr<DataBase::DbConnectorBase> &db_connector)
+    void Config::init(std::unique_ptr<DataBase::DbConnectorBase> &db_connector, std::unique_ptr<Interaction::InteractionBase> &interaction)
     {
         Config::instance()->db_connector.swap(db_connector);
+        Config::instance()->interaction.swap(interaction);
     }
 
 
@@ -24,6 +25,12 @@ namespace Enviroment
     {
         return Config::instance()->db_connector.get();
     }
+
+    Interaction::InteractionBase * Config::get_interaction()
+    {
+        return Config::instance()->interaction.get();
+    }
+
 }
 
 

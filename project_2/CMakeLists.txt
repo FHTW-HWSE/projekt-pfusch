@@ -10,6 +10,7 @@ file(GLOB p2_sources
     src/helper/*.cpp
     src/ui/*.cpp
     src/views/*.cpp
+    src/interaction/*.cpp
     src/enviroment/*.cpp
 )
 
@@ -23,6 +24,7 @@ target_include_directories(p2 PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include/enviroment
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fascades
     ${CMAKE_CURRENT_SOURCE_DIR}/include/helper
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/interaction
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ui_menu
 )
     
@@ -50,6 +52,7 @@ target_include_directories(project_2_test PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include/enviroment
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fascades
     ${CMAKE_CURRENT_SOURCE_DIR}/include/helper
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/interaction
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ui_menu
 ) 
 target_include_directories(project_2_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test/include) 
@@ -64,6 +67,7 @@ target_include_directories(ps_lib PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include/enviroment
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fascades
     ${CMAKE_CURRENT_SOURCE_DIR}/include/helper
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/interaction
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ui_menu
 ) 
 target_link_libraries(ps_lib PRIVATE Result::Result)

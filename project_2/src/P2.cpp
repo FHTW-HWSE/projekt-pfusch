@@ -6,6 +6,7 @@
 #include "UiFascade.hpp"
 #include <iostream>
 #include "UIMainMenu.hpp"
+#include "Interaction.hpp"
 
 int main(int argc, char* args[])
 {
@@ -15,7 +16,9 @@ int main(int argc, char* args[])
     std::string path = "../../project_2/test/db_source/";
     auto connector = std::unique_ptr<DataBase::DbConnectorBase>(new DataBase::DbConnector(path, crud));
 
-    Enviroment::Config::init(connector);
+    auto interaction = std::unique_ptr<Interaction::InteractionBase>(new Interaction::Interaction());
+
+    Enviroment::Config::init(connector, interaction);
 
     auto init_db = Enviroment::Config::instance()->get_db_con()->init_db();
 
@@ -23,6 +26,7 @@ int main(int argc, char* args[])
     {
         std::cerr << init_db.error() << std::endl;
     }
+    
 #pragma endregion
     
     UiMenu::MainMenu mainMenu;

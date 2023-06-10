@@ -14,6 +14,8 @@
 #include "DbCrudMock.hpp"
 #include "DbConnector.hpp"
 #include "DbCrud.hpp" 
+#include "InteractionMock.hpp"
+#include "Interaction.hpp"
 
 // Standard C/C++ main entry point
 const std::string DB_PATH = "../../project_2/test/db_source/";
@@ -75,7 +77,9 @@ void Enviroment_mock()
   std::string path = "./db_source/";
   auto connector = std::unique_ptr<DataBase::DbConnectorBase>(new DataBase::DbConnectorMock(path, crud));
   
-  Enviroment::Config::init(connector);
+  auto inter = std::unique_ptr<Interaction::InteractionBase>(new Interaction::InteractionMock());
+
+  Enviroment::Config::init(connector, inter);
 }
 
 void Enviroment_actual()
@@ -84,6 +88,9 @@ void Enviroment_actual()
 
   std::string path = "./db_source/";
   auto connector = std::unique_ptr<DataBase::DbConnectorBase>(new DataBase::DbConnector(path, crud));
+
+  auto inter = std::unique_ptr<Interaction::InteractionBase>(new Interaction::Interaction());
+
   
-  Enviroment::Config::init(connector);
+  Enviroment::Config::init(connector, inter);
 }

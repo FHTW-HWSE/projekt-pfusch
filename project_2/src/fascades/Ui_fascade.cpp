@@ -1,4 +1,5 @@
 #include "UiFascade.hpp"
+#include "Enviroment.hpp"
 
 #include <iostream>
 #include <string>
@@ -9,76 +10,44 @@ namespace Fascades
 {         
     auto UiFascade::showMenu(UiMenu::MenuBase &menu) noexcept -> cpp::result<bool, std::string>
     {
-        menu.show();
+        auto interaction = Enviroment::Config::instance()->get_interaction();
 
-        return true;
+        return interaction->showMenu(menu);
     }
 
     auto UiFascade::get_int() noexcept -> cpp::result<int, std::string>
     {
-        int num;
+        auto interaction = Enviroment::Config::instance()->get_interaction();
 
-        std::cin >> num;
-
-        if(std::cin.fail())
-        {
-            std::cin.clear();
-            std::cin.ignore( std::numeric_limits<std::streamsize>::max(), '\n' );
-            return cpp::fail("Nan");
-        }
-
-        return num;
+        return interaction->get_int();
     }
 
-    auto UiFascade::write_string(const std::string &str) noexcept -> cpp::result<void, std::string>
+    auto UiFascade::write_string(const std::string &str) noexcept -> cpp::result<bool, std::string>
     {
-        std::cout << str << std::endl;
+        auto interaction = Enviroment::Config::instance()->get_interaction();
 
-        //throw exception;
-
-        return {};
+        return interaction->write_string(str);
     }
 
     auto UiFascade::print_options_and_get_result(std::vector<std::string> &options) noexcept -> cpp::result<int, std::string>
     {
-        int i = 1;
-        for (const std::string &opt : options)
-        {
-			std::string option = std::to_string(i++) + ": " + opt;
+        auto interaction = Enviroment::Config::instance()->get_interaction();
 
-            auto write_r = write_string(option);
-
-            if(write_r.has_error())
-            {
-                return cpp::fail(write_r.error());
-            }
-        }
-
-        auto int_r = get_int();
-
-        if(int_r.has_error())
-        {
-            return cpp::fail(int_r.error());
-        }
-
-        if(int_r.value() < 1 || int_r.value() > options.size())
-        {
-            return cpp::fail("invalid option chosen.");
-        }
-
-        return int_r.value();
+        return interaction->print_options_and_get_result(options);
     }
 
     auto UiFascade::print_options_and_get_result(std::vector<std::string> &options, std::string &leading_prompt) noexcept -> cpp::result<int, std::string>
     {
 
-        auto write_r = write_string(leading_prompt);
+        auto interaction = Enviroment::Config::instance()->get_interaction();
+
+        auto write_r = interaction->write_string(leading_prompt);
 
         if(write_r.has_error())
         {
             return cpp::fail(write_r.error());
         }
 
-        return print_options_and_get_result(options);
+        return interaction->print_options_and_get_result(options);
     }
 }
