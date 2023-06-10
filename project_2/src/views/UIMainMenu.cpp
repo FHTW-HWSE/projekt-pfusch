@@ -35,6 +35,7 @@ namespace UiMenu
             if(option_r.has_error())
             {
                 auto blub = Fascades::UiFascade::write_string(option_r.error());
+                continue;
             }
             
             switch (option_r.value())
@@ -55,5 +56,7 @@ namespace UiMenu
                     break;
             }
         }
+
+        return;
     }
 }

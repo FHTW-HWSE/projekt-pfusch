@@ -15,6 +15,7 @@ namespace UiMenu
             options.push_back("list all tables");
             options.push_back("update table");
             options.push_back("delete table");
+            options.push_back("close menu");
 
             std::string option_header = "Please select an option from the list.";
             auto option_r = Fascades::UiFascade::print_options_and_get_result(options, option_header);
@@ -22,6 +23,7 @@ namespace UiMenu
             if(option_r.has_error())
             {
                 auto blub = Fascades::UiFascade::write_string(option_r.error());
+                continue;
             }
             
             switch (option_r.value())
@@ -40,11 +42,12 @@ namespace UiMenu
                     /* code */
                     break;
                 case 3:
-                    repeat = false;
+                    /* code */
                 case 4:
                     break;
-                default:
+                case 5:
                     repeat = false;
+                default:
                     break;
             }
         }
