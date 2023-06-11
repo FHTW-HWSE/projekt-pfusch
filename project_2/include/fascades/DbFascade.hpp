@@ -26,6 +26,7 @@ namespace Fascades
             static auto create_reservation(Entities::ReservationEntity &table) noexcept -> cpp::result<bool, std::string>;
             static auto get_reservations_by_x_y(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations, const int &x, const int &y) noexcept -> cpp::result<bool, std::string>;
             static auto get_reservations_by_id(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations, const uuids::uuid &id) noexcept -> cpp::result<bool, std::string>;
+            static auto get_all_reservations(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations) noexcept -> cpp::result<bool, std::string>;
             static auto get_all_open_reservations(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations) noexcept -> cpp::result<bool, std::string>;
             static auto update_reservation(Entities::ReservationEntity &reservation) noexcept -> cpp::result<bool, std::string>;
             static auto delete_reservation(Entities::ReservationEntity &reservation) noexcept -> cpp::result<bool, std::string>;

@@ -11,7 +11,7 @@ namespace Entities
         this->contact_person = "default";
     }
 
-    ReservationEntity::ReservationEntity( Entities::TableEntity &table, std::string &contact_person) : BaseEntity()
+    ReservationEntity::ReservationEntity( const Entities::TableEntity &table, const std::string &contact_person) : BaseEntity()
     {
         this->table = std::make_unique<TableEntity>(table);
         this->start_time = 0;
@@ -19,7 +19,7 @@ namespace Entities
         this->contact_person = contact_person;
     }
 
-    ReservationEntity::ReservationEntity(Entities::TableEntity &table, time_t &start_time, time_t &end_time, std::string &contact_person) : ReservationEntity(table, contact_person)
+    ReservationEntity::ReservationEntity(const Entities::TableEntity &table, const  time_t &start_time, const time_t &end_time, const std::string &contact_person) : ReservationEntity(table, contact_person)
     {
         this->start_time = start_time;
         this->end_time = end_time;
@@ -75,6 +75,13 @@ namespace Entities
         // convert data
         auto id = Helper::str_to_uuid(fields.at(index++));
 
+        auto id_str = Helper::id_to_string(id.value());
+
+        if(id.has_error())
+        {
+            return cpp::fail("could not parse id.");
+        }
+
         TableEntity tmp_table(0,0,0);
         std::unique_ptr<BaseEntity> parse_target(nullptr);
         auto parse_r = tmp_table.parse_from_csv(parse_target, fields, index);
@@ -86,7 +93,7 @@ namespace Entities
             return parse_r;
         }
 
-        TableEntity *table_ptr = dynamic_cast<TableEntity*>(target.get());
+        TableEntity *table_ptr = dynamic_cast<TableEntity*>(parse_target.get());
 
         if (table_ptr == nullptr)
         {
@@ -98,6 +105,7 @@ namespace Entities
         std::string person = fields.at(index);
 
         target = std::make_unique<ReservationEntity>(ReservationEntity(*table_ptr, start_time, end_time, person));
+        target.get()->id = id.value();
 
         return true;
 
@@ -113,6 +121,9 @@ namespace Entities
         t = dynamic_cast<ReservationEntity *>(&target);
         s = dynamic_cast<ReservationEntity *>(&source);
 
+        auto id3 = Helper::id_to_string(t->id);
+        auto id4 = Helper::id_to_string(s->id);
+
         return t != nullptr && s != nullptr;
     }
 
@@ -120,7 +131,10 @@ namespace Entities
     {
         ReservationEntity *t, *s;
 
-        if (match_convert_ptr(t, s, target, source))
+        t = dynamic_cast<ReservationEntity *>(&target);
+        s = dynamic_cast<ReservationEntity *>(&source);
+
+        if (t == nullptr || s == nullptr)
         {
             return cpp::fail("Target or source not of type Entities::TableEntity.");
         }
@@ -132,7 +146,10 @@ namespace Entities
     {
         ReservationEntity *t, *s;
 
-        if (match_convert_ptr(t, s, target, source))
+        t = dynamic_cast<ReservationEntity *>(&target);
+        s = dynamic_cast<ReservationEntity *>(&source);
+
+        if (t == nullptr || s == nullptr)
         {
             return cpp::fail("Target or source not of type Entities::TableEntity.");
         }
@@ -146,7 +163,9 @@ namespace Entities
     {
         ReservationEntity *t, *s;
 
-        if (match_convert_ptr(t, s, target, source))
+        t = dynamic_cast<ReservationEntity *>(&target);
+
+        if (t == nullptr)
         {
             return cpp::fail("Target or source not of type Entities::TableEntity.");
         }
@@ -158,7 +177,9 @@ namespace Entities
     {
         ReservationEntity *t, *s;
 
-        if (match_convert_ptr(t, s, target, source))
+        t = dynamic_cast<ReservationEntity *>(&target);
+
+        if (t == nullptr)
         {
             return cpp::fail("Target or source not of type Entities::TableEntity.");
         }

@@ -20,8 +20,8 @@ namespace Entities
         public:
             //constructor
             ReservationEntity();
-            ReservationEntity(Entities::TableEntity &table, std::string &contact_person);
-            ReservationEntity(Entities::TableEntity &table, time_t &start_time, time_t &end_time, std::string &contact_person);
+            ReservationEntity(const Entities::TableEntity &table, const std::string &contact_person);
+            ReservationEntity(const Entities::TableEntity &table, const time_t &start_time, const time_t &end_time, const std::string &contact_person);
             ReservationEntity(const ReservationEntity &reservation);
             //destructor
             ~ReservationEntity();

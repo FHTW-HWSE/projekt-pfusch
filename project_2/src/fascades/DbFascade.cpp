@@ -25,6 +25,12 @@ namespace Fascades
     }
 
 #pragma region  TableEntity
+
+    auto DbFascade::create_table(Entities::TableEntity &table) noexcept -> cpp::result<bool, std::string>
+    {
+        return DataBase::Query::create_table(table);
+    }
+
     auto DbFascade::get_tables_by_x_y(std::vector<std::unique_ptr<Entities::TableEntity>> &tables, const int &x, const int &y) noexcept -> cpp::result<bool, std::string>
     {
         Entities::TableEntity table(x, y, 0);
@@ -90,11 +96,6 @@ namespace Fascades
         return items.size() > 0;
     }
 
-    auto DbFascade::create_table(Entities::TableEntity &table) noexcept -> cpp::result<bool, std::string>
-    {
-        return DataBase::Query::create_table(table);
-    }
-
     auto DbFascade::update_table(Entities::TableEntity &table) noexcept -> cpp::result<bool, std::string>
     {
         return DataBase::Query::update_table(table);
@@ -106,6 +107,8 @@ namespace Fascades
     }
 
 #pragma endregion
+
+#pragma region TableEntity
 
     auto DbFascade::create_reservation(Entities::ReservationEntity &table) noexcept -> cpp::result<bool, std::string>
     {
@@ -182,6 +185,27 @@ namespace Fascades
 
     }
 
+    auto DbFascade::get_all_reservations(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations) noexcept -> cpp::result<bool, std::string>
+    {
+        std::vector<std::unique_ptr<Entities::BaseEntity>> items;
+
+        auto query_result = DataBase::Query::read_all_reservations(items);
+
+        if(query_result.has_error()){
+            return query_result;
+        }
+
+        auto fill_r = fill_vector(reservations, items);
+
+        if(fill_r.has_error())
+        {
+            return fill_r;
+        }
+
+        return items.size() > 0;
+    }
+
+
     auto DbFascade::update_reservation(Entities::ReservationEntity &reservation) noexcept -> cpp::result<bool, std::string>
     {
         return DataBase::Query::update_reservation(reservation);
@@ -191,5 +215,7 @@ namespace Fascades
     {
         return DataBase::Query::delete_reservation(reservation);
     }
+
+#pragma endregion
 
 }

@@ -9,6 +9,8 @@
 
 #include "DbCrud.hpp"
 
+#include "conversion_helper.hpp"
+
 
 namespace DataBase
 {
@@ -99,6 +101,8 @@ namespace DataBase
 				fin.close();
 				return cpp::fail(parse_r.error());
 			}
+
+			auto id_str = Helper::id_to_string(target.get()->id);
 
 			auto read_result = match_func(*target, source);
 
@@ -224,18 +228,22 @@ namespace DataBase
 		int rollnum, roll1, marks, count = 0, i;
 		char sub;
 		int index, new_marks;
-		std::string line, word;
+		std::string line, word, temp;
 		std::vector<std::string> row;
 		std::vector<std::string> updated_file_rows;
 		bool updated = false;
 
-		// Traverse the file
-		while (!fin.eof())
+		while (fin >> temp)
 		{
 
 			row.clear();
 
-			getline(fin, line);
+			// read an entire row and
+			// store it in a std::string variable 'line'
+			// getline(fin, line);
+			line = temp;
+
+			// getline(fin, line);
 			std::stringstream s(line);
 
 			while (getline(s, word, e.delimiter))
@@ -320,7 +328,7 @@ namespace DataBase
 		int rollnum, roll1, marks, count = 0, i;
 		char sub;
 		int index, new_marks;
-		std::string line, word;
+		std::string line, word, temp;
 		std::vector<std::string> row;
 		std::vector<std::string> updated_file_rows;
 		bool updated = false;
@@ -328,11 +336,18 @@ namespace DataBase
 		// Check if this record exists
 		// If exists, leave it and
 		// add all other data to the new file
-		while (!fin.eof())
+		while (fin >> temp)
 		{
 
 			row.clear();
-			getline(fin, line);
+
+			// read an entire row and
+			// store it in a std::string variable 'line'
+			// getline(fin, line);
+			line = temp;
+
+			row.clear();
+			// getline(fin, line);
 			std::stringstream s(line);
 
 			while (getline(s, word, e.delimiter))

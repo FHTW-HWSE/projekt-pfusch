@@ -264,7 +264,6 @@ namespace DataBase
         }
 
         std::string filename = r_path.value();
-        std::unique_ptr<Entities::BaseEntity> type = std::make_unique<Entities::ReservationEntity>(Entities::ReservationEntity());
 
         return Enviroment::Config::instance()->get_db_con()->get_crud()
             ->read_records(reservations, reservation, filename, Entities::ReservationEntity::match_by_id);
