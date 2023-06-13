@@ -60,7 +60,8 @@ namespace UiMenu
             Fascades::UiFascade::print_string(r_save.error());
         }
 
-        Fascades::UiFascade::print_string("reservation saved.");
+        Fascades::UiFascade::print_string("reservation saved with following values:");
+        Fascades::UiFascade::print_string(reservation.to_string());
 
         return;
     }

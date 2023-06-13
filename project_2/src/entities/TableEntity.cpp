@@ -146,8 +146,8 @@ namespace Entities
 
     std::string TableEntity::to_string()
     {
-        char buff[200];
-        snprintf(buff, sizeof(buff), "x: %d, y: %d, capacity: %d", this->x, this->y, this->capacity);
+        char buff[255];
+        snprintf(buff, sizeof(buff), " table: x: %d, y: %d", this->x, this->y);
         std::string buffAsStdStr = buff;
 
         return buffAsStdStr;

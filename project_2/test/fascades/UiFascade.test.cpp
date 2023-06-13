@@ -97,10 +97,7 @@ SCENARIO("UiFascade")
 				cpp::fail("some error message")
 			);
 
-			std::string str = "unit test string";
-            const auto r = cpp::result<std::string, std::string>{str};
-
-			inter->mock_get_string(r);
+			inter->mock_get_string(res);
 
 			auto r_str = inter->get_string();
 
@@ -109,12 +106,12 @@ SCENARIO("UiFascade")
 				if(res.has_error())
 				{
 					REQUIRE(r_str.has_error());
-					REQUIRE(r_str.error().compare(res.error()) == true);
+					REQUIRE(r_str.error().compare(res.error()) == 0);
 				}
 				else
 				{
 					REQUIRE(r_str.has_value());
-					REQUIRE(r_str.value().compare(res.value()) == true);
+					REQUIRE(r_str.value().compare(res.value()) == 0);
 				}
 			}
 

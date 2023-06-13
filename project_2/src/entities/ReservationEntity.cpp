@@ -200,7 +200,7 @@ namespace Entities
         (
             buff, 
             sizeof(buff), 
-            "%s, start time: %s, end time: %s, contact person: %s", 
+            "%s, reservation: start time: %s, end time: %s, contact person: %s", 
             this->table.get()->to_string().c_str(), 
             Helper::time_t_to_readable_string(this->start_time).c_str(), 
             Helper::time_t_to_readable_string(this->end_time).c_str(),

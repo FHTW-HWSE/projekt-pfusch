@@ -38,7 +38,8 @@ namespace UiMenu
             return;
         }
 
-        Fascades::UiFascade::print_string("Table created");
+        Fascades::UiFascade::print_string("Table created with following values:");
+        Fascades::UiFascade::print_string(table.to_string());
 
         return;
     }

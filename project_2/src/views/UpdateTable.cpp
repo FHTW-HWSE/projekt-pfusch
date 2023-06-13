@@ -68,7 +68,8 @@ namespace UiMenu
             return;
         }
 
-        Fascades::UiFascade::print_string("Table updated");
+        Fascades::UiFascade::print_string("Table updated with following values:");
+        Fascades::UiFascade::print_string(table.get()->to_string());
 
         return;
     }
