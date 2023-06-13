@@ -1,6 +1,7 @@
 #include "Base.hpp"
 #include "UIMainMenu.hpp"
 #include "ConfigTablesMenu.hpp"
+#include "ConfigReservations.hpp"
 #include "UiFascade.hpp"
 #include "DbFascade.hpp"
 
@@ -18,7 +19,7 @@ namespace UiMenu
 
     void MainMenu::show()
     {
-        auto intro_msg = Fascades::UiFascade::write_string("Welcome to our awesome pfusch.");
+        Fascades::UiFascade::print_string("Welcome to our awesome pfusch.");
 
         bool repeat = true;
 
@@ -34,28 +35,31 @@ namespace UiMenu
 
             if(option_r.has_error())
             {
-                auto blub = Fascades::UiFascade::write_string(option_r.error());
+                Fascades::UiFascade::print_string(option_r.error());
                 continue;
             }
             
             switch (option_r.value())
             {
-                case 1:
+                case 0:
                 {
                     ConfigTablesMenu tablesMenu;
-                    auto show_r = Fascades::UiFascade::showMenu(tablesMenu);
+                    Fascades::UiFascade::showMenu(tablesMenu);
+                }
+                    break;
+                case 1:
+                {
+                    ConfigReservationsMenu res;
+                    Fascades::UiFascade::showMenu(res);
                 }
                     break;
                 case 2:
-                    /* code */
-                    break;
-                case 3:
                     repeat = false;
                 default:
-                    repeat = false;
                     break;
             }
         }
+        
 
         return;
     }

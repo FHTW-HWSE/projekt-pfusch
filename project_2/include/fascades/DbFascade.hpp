@@ -13,6 +13,8 @@ namespace Fascades
             template<class T>
             static auto fill_vector(std::vector<std::unique_ptr<T>> &tables, std::vector<std::unique_ptr<Entities::BaseEntity>> &items) noexcept -> cpp::result<bool, std::string>;
             // static auto fill_tables_vector(std::vector<std::unique_ptr<Entities::TableEntity>> &tables, std::vector<std::unique_ptr<Entities::BaseEntity>> &items) noexcept -> cpp::result<bool, std::string>;
+            static bool reservations_intersect(const Entities::ReservationEntity &a, const Entities::ReservationEntity &b);
+            static bool reservation_within_radius(const Entities::ReservationEntity &middle, const Entities::ReservationEntity &point, const int &radius);
 
         public:
             // TableEntity
@@ -28,6 +30,7 @@ namespace Fascades
             static auto get_reservations_by_id(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations, const uuids::uuid &id) noexcept -> cpp::result<bool, std::string>;
             static auto get_all_reservations(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations) noexcept -> cpp::result<bool, std::string>;
             static auto get_all_open_reservations(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations) noexcept -> cpp::result<bool, std::string>;
+            static auto get_reservations_within_radius_of_reservation(std::vector<std::unique_ptr<Entities::ReservationEntity>> &reservations, const Entities::ReservationEntity &reservation, const int &radius) noexcept -> cpp::result<bool, std::string>;
             static auto update_reservation(Entities::ReservationEntity &reservation) noexcept -> cpp::result<bool, std::string>;
             static auto delete_reservation(Entities::ReservationEntity &reservation) noexcept -> cpp::result<bool, std::string>;
     };

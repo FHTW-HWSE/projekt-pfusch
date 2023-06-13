@@ -7,9 +7,6 @@ namespace UiMenu
 {
     class ConfigTablesMenu : public MenuBase
     {
-        private:
-            auto createTable() noexcept -> cpp::result<bool, std::string>;
-
         public:
             ConfigTablesMenu(){};
             ~ConfigTablesMenu(){};

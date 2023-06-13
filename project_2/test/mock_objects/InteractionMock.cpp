@@ -51,22 +51,33 @@ namespace Interaction
         return *item;
     }
 
-    void InteractionMock::mock_showMenu(const cpp::result<bool, std::string> &result)
+    static void push_string_string
+    (
+        std::queue<std::unique_ptr<cpp::result<std::string, std::string>>> &queue, 
+        const cpp::result<std::string, std::string> &result
+    )
     {
-        push_bool_string(this->showMenu_queue, result);
+        queue.push(std::make_unique<cpp::result<std::string, std::string>>(result));
     }
 
-
-    auto InteractionMock::showMenu(UiMenu::MenuBase &menu) noexcept -> cpp::result<bool, std::string>
+    static auto pop_string_string(std::queue<std::unique_ptr<cpp::result<std::string, std::string>>> &queue) noexcept -> cpp::result<std::string, std::string>
     {
-        const auto r = pop_bool_string(this->showMenu_queue); 
-
-        if(r.has_error())
+        if(queue.size() == 0)
         {
-            return cpp::fail(r.error());
+            return cpp::fail("no mock objects provided");
         }
 
-        return r.value();
+        auto item = std::move(queue.front());
+        queue.pop();
+
+        return *item;
+    }
+
+    void InteractionMock::showMenu(UiMenu::MenuBase &menu)
+    {
+        //nothing to do here
+
+        return;
     }
 
     void InteractionMock::mock_get_int(const cpp::result<int, std::string> &result)
@@ -86,22 +97,11 @@ namespace Interaction
         return r.value();
     }
 
-    void InteractionMock::mock_write_string(const cpp::result<bool, std::string> &result)
+    void InteractionMock::print_string(const std::string &str)
     {
-        push_bool_string(this->write_string_queue, result);
-    }
+        //noting to do here
 
-
-    auto InteractionMock::write_string(const std::string &str) noexcept -> cpp::result<bool, std::string>
-    {
-        const auto r = pop_bool_string(this->write_string_queue); 
-
-        if(r.has_error())
-        {
-            return cpp::fail(r.error());
-        }
-
-        return r.value();
+        return;
     }
 
     void InteractionMock::mock_print_options_and_get_result(const cpp::result<int, std::string> &result)
@@ -112,6 +112,23 @@ namespace Interaction
     auto InteractionMock::print_options_and_get_result(std::vector<std::string> &options) noexcept -> cpp::result<int, std::string>
     {
         const auto r = pop_int_string(this->print_options_and_get_result_queue); 
+
+        if(r.has_error())
+        {
+            return cpp::fail(r.error());
+        }
+
+        return r.value();
+    }
+
+    void InteractionMock::mock_get_string(const cpp::result<std::string, std::string> &result)
+    {
+        push_string_string(this->get_string_queue, result);
+    }
+
+    auto InteractionMock::get_string() noexcept -> cpp::result<std::string, std::string>
+    {
+        const auto r = pop_string_string(this->get_string_queue); 
 
         if(r.has_error())
         {

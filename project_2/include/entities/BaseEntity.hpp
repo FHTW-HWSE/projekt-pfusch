@@ -33,6 +33,7 @@ namespace Entities
             //virtual pure functions
             virtual std::unique_ptr<BaseEntity> clone() const = 0;
             virtual auto parse_from_csv(std::unique_ptr<BaseEntity> &target, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string> = 0;
+            virtual std::string to_string() = 0;
             //virtual functins
             virtual std::string parse_to_csv();
             virtual int get_persitable_prop_count();

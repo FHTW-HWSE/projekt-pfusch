@@ -25,4 +25,8 @@ namespace Helper
 	std::string time_t_to_string(const time_t &time);
 
 	time_t string_to_time_t(const std::string str);
+
+	time_t get_time_now();
+
+	std::string time_t_to_readable_string(const time_t &time);
 }

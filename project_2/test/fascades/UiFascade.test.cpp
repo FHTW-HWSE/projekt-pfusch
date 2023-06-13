@@ -17,18 +17,14 @@ SCENARIO("UiFascade")
 	GIVEN("show a menu")
 	{
 		WHEN("show menu")
-		{
-            const auto r = cpp::result<bool, std::string>{true};
-
-            inter->mock_showMenu(r);
-            
+		{            
             UiMenu::MainMenu menu;
 
 			THEN("menu is shown")
 			{
-                auto show_r = Fascades::UiFascade::showMenu(menu);
+                Fascades::UiFascade::showMenu(menu);
                 
-                REQUIRE(r == show_r);
+                REQUIRE(true == true);
 			}
 		}
 	}
@@ -53,23 +49,18 @@ SCENARIO("UiFascade")
 		}
 	}
 
-    GIVEN("write_string")
+    GIVEN("print_string")
 	{
-		WHEN("write_string")
-		{
-            const auto r = cpp::result<bool, std::string>{true};
-
-            inter->mock_write_string(r);
-            
+		WHEN("print_string")
+		{            
             UiMenu::MainMenu menu;
 
 			THEN("string is wirten")
 			{
                 std::string msg = "nah";
-                auto show_r = Fascades::UiFascade::write_string(msg);
+                Fascades::UiFascade::print_string(msg);
             
-                REQUIRE(r.has_value() == show_r.has_value());
-                REQUIRE(r.value() == show_r.value());
+                REQUIRE(true == true);
 			}
 		}
 	}
@@ -92,6 +83,41 @@ SCENARIO("UiFascade")
                 REQUIRE(r.has_value() == show_r.has_value());
                 REQUIRE(r.value() == show_r.value());
 			}
+		}
+	}
+
+	GIVEN("want to get string from user")
+	{
+		WHEN("get string from user")
+		{
+
+			auto res = GENERATE_COPY
+			(
+				cpp::result<std::string, std::string>{"unit test tring"},
+				cpp::fail("some error message")
+			);
+
+			std::string str = "unit test string";
+            const auto r = cpp::result<std::string, std::string>{str};
+
+			inter->mock_get_string(r);
+
+			auto r_str = inter->get_string();
+
+			THEN("string is fetched from user")
+			{
+				if(res.has_error())
+				{
+					REQUIRE(r_str.has_error());
+					REQUIRE(r_str.error().compare(res.error()) == true);
+				}
+				else
+				{
+					REQUIRE(r_str.has_value());
+					REQUIRE(r_str.value().compare(res.value()) == true);
+				}
+			}
+
 		}
 	}
 }

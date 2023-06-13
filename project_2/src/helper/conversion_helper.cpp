@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <string>
 #include <sstream>
+#include <chrono>
 
 #include "conversion_helper.hpp"
 
@@ -97,12 +98,34 @@ namespace Helper
 		return oss.str();
 	}
 
+	std::string time_t_to_readable_string(const time_t &time)
+	{
+		if(time == 0)
+		{
+			return "open";
+		}
+
+		std::tm local = *std::localtime(&time);
+
+		char buffer[255];
+        size_t format = strftime(buffer, 15, "%Y-%m-%d %H:%M", &local);
+
+		return buffer;
+
+	}
+
 	time_t string_to_time_t(const std::string str)
 	{
 		std::istringstream stream( str );
 		time_t t;
 		stream >> t;
 		return t;
+	}
+
+	time_t get_time_now()
+	{
+		auto now = std::chrono::system_clock::now();
+		return std::chrono::system_clock::to_time_t(now);
 	}
 
 }

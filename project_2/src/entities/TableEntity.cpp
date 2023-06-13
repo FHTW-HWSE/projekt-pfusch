@@ -1,6 +1,7 @@
 #include "TableEntity.hpp"
 #include "Base.hpp"
 #include "conversion_helper.hpp"
+#include <cstdio>
 
 namespace Entities
 {
@@ -141,6 +142,15 @@ namespace Entities
         }
 
         return table_source->x == table_target->x && table_source->y == table_target->y;
+    }
+
+    std::string TableEntity::to_string()
+    {
+        char buff[200];
+        snprintf(buff, sizeof(buff), "x: %d, y: %d, capacity: %d", this->x, this->y, this->capacity);
+        std::string buffAsStdStr = buff;
+
+        return buffAsStdStr;
     }
 }
 

@@ -12,11 +12,17 @@ namespace Interaction
 
     }
 
-    auto Interaction::showMenu(UiMenu::MenuBase &menu) noexcept -> cpp::result<bool, std::string>
+    void Interaction::showMenu(UiMenu::MenuBase &menu)
     {
         menu.show();
 
-        return true;
+        return;
+    }
+
+    void Interaction::flush_cin()
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
     auto Interaction::get_int() noexcept -> cpp::result<int, std::string>
@@ -25,23 +31,26 @@ namespace Interaction
 
         std::cin >> num;
 
+        flush_cin();
+
         if(std::cin.fail())
         {
-            std::cin.clear();
-            std::cin.ignore( std::numeric_limits<std::streamsize>::max(), '\n' );
-            return cpp::fail("Nan");
+            return cpp::fail("input was not an integer.");
         }
 
         return num;
     }
 
-    auto Interaction::write_string(const std::string &str) noexcept -> cpp::result<bool, std::string>
+    void Interaction::print_string(const std::string &str)
     {
         std::cout << str << std::endl;
 
-        //throw exception;
+        if(std::cout.fail())
+        {
+            std::cerr << "Error while writing to stdout.";
+        }
 
-        return true;
+        return;
     }
 
     auto Interaction::print_options_and_get_result(std::vector<std::string> &options) noexcept -> cpp::result<int, std::string>
@@ -51,12 +60,7 @@ namespace Interaction
         {
 			std::string option = std::to_string(i++) + ": " + opt;
 
-            auto write_r = write_string(option);
-
-            if(write_r.has_error())
-            {
-                return cpp::fail(write_r.error());
-            }
+            print_string(option);
         }
 
         auto int_r = get_int();
@@ -71,6 +75,23 @@ namespace Interaction
             return cpp::fail("invalid option chosen.");
         }
 
-        return int_r.value();
+        return int_r.value() - 1;
     }
+
+    auto Interaction::get_string() noexcept -> cpp::result<std::string, std::string>
+    {
+        std::string str;
+
+        std::cin >> str;
+
+        flush_cin();
+
+        if(std::cin.fail())
+        {
+            return cpp::fail("could not get string from user");
+        }
+
+        return str;
+    }
+
 }

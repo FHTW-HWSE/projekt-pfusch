@@ -9,12 +9,6 @@ namespace DataBase
     class DbConnectorBase
     {
         private:
-            //fields
-            // std::string connection;
-            // std::unique_ptr<DataBase::DbCrudBase> crud;
-            //virtual functions
-            // virtual auto create_file_if_not_exists(std::string &path) noexcept -> cpp::result<bool, std::string> = 0;
-            // virtual auto create_dictionary_if_not_exists(std::string &path) noexcept -> cpp::result<bool, std::string> = 0;
 
         public:
             //dstr

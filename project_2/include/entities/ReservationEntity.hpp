@@ -36,6 +36,7 @@ namespace Entities
             virtual std::string parse_to_csv() override;
             virtual auto parse_from_csv(std::unique_ptr<BaseEntity> &target, std::vector<std::string> &fields, int &index) noexcept -> cpp::result<bool, std::string> override;
             virtual int get_persitable_prop_count() override;
+            virtual std::string to_string() override;
             //functions
             static auto match_by_id(BaseEntity &target, BaseEntity &source) noexcept -> cpp::result<bool, std::string>;
             static auto match_by_table_x_y(BaseEntity &target, BaseEntity &source) noexcept -> cpp::result<bool, std::string>;

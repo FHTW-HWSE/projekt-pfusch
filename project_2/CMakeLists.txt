@@ -30,19 +30,21 @@ target_include_directories(p2 PRIVATE
     
 target_link_libraries(p2 PRIVATE Result::Result)
 
+
+# test executable
+
 file(GLOB test_sources
     test/*.cpp
     test/db/*.cpp
+    test/entities/*.cpp
     test/mock_objects/*.cpp
     test/fascades/*.cpp
 )
 
-# test executable
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 add_executable(project_2_test 
-    ${test_sources}
+${test_sources}
 )
 
 target_include_directories(project_2_test PRIVATE 
@@ -57,7 +59,7 @@ target_include_directories(project_2_test PRIVATE
 ) 
 target_include_directories(project_2_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test/include) 
 
-message(${CMAKE_CURRENT_SOURCE_DIR}/include)
+# create a lib from main project and link to test executable
 
 add_library(ps_lib ${p2_sources})
 target_include_directories(ps_lib PRIVATE 

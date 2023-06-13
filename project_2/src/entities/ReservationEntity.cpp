@@ -187,4 +187,30 @@ namespace Entities
         return t->end_time == 0;
     }
 
+    std::string ReservationEntity::to_string()
+    {
+        char buff[1024];
+
+        std::string a0 = this->table.get()->to_string();
+        std::string a1 = Helper::time_t_to_string(this->start_time); 
+        std::string a2 = Helper::time_t_to_string(this->end_time);
+        std::string a3 = this->contact_person;
+
+        snprintf
+        (
+            buff, 
+            sizeof(buff), 
+            "%s, start time: %s, end time: %s, contact person: %s", 
+            this->table.get()->to_string().c_str(), 
+            Helper::time_t_to_readable_string(this->start_time).c_str(), 
+            Helper::time_t_to_readable_string(this->end_time).c_str(),
+            this->contact_person.c_str()
+        );
+
+        std::string buffAsStdStr = buff;
+
+        return buffAsStdStr;
+
+    }
+
 }
